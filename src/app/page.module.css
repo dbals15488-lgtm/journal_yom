@@ -1,0 +1,119 @@
+/* src/app/page.module.css */
+.container {
+    display: flex;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+  }
+  
+  .sidebar {
+    width: 260px;
+    background-color: #1a1c23;
+    color: #fff;
+    padding: 2rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main {
+    flex: 1;
+    padding: 3rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  
+  .monthList {
+    margin-top: 2rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .monthItem {
+    padding: 12px 15px;
+    margin-bottom: 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #a0aec0;
+  }
+  
+  .monthItem:hover {
+    background-color: #2d3748;
+    color: white;
+  }
+  
+  .activeMonth {
+    background-color: #4c51bf;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .card {
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    margin-top: 2rem;
+  }
+  
+  .dayGrid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    margin-top: 1.5rem;
+  }
+  
+  .dayButton {
+    padding: 10px;
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+    background: #fff;
+    cursor: pointer;
+  }
+  
+  .dayButton:hover {
+    background: #edf2f7;
+  }
+
+  .recordHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .timeTag {
+    font-size: 0.8rem;
+    color: #a0aec0;
+    background: #f7fafc;
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+.dayTag{
+  color: #7595be;
+    background: #f7fafc;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-size: 1rem;
+    margin-right: 20px;
+    font-weight: bold;
+}
+  .dateTag{
+    display: inline-block;
+  }
+  
+  .recordCard {
+    border: 1px solid #edf2f7;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background: white;
+    transition: transform 0.2s;
+    color: #000;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .recordCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }

@@ -1,0 +1,55 @@
+.editorContainer {
+    margin-top: 2rem;
+    padding: 2rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+  }
+  
+  .textarea {
+    width: 100%;
+    height: 150px;
+    margin-top: 1rem;
+    padding: 1.2rem;
+    border-radius: 12px;
+    border: 1px solid #edf2f7;
+    font-size: 1rem;
+    resize: none; /* 크기 조절 못하게 고정 */
+  }
+  
+  .textarea:focus {
+    outline: none;
+    border-color: #4c51bf;
+  }
+  
+  .saveButton {
+    margin-top: 1rem;
+    width: 100%;
+    padding: 15px;
+    background: #4c51bf;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  
+  .saveButton:hover {
+    background: #3c41a3;
+  }
+
+  .titleInput {
+    width: 100%;
+    padding: 12px;
+    margin-top: 1rem;
+    border: 1px solid #edf2f7;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+  
+  .titleInput:focus {
+    outline: none;
+    border-color: #4c51bf;
+  }

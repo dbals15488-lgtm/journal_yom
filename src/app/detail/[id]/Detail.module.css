@@ -1,0 +1,84 @@
+.container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 20px;
+  }
+  
+  .backBtn {
+    background: none;
+    border: none;
+    color: #4c51bf;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-bottom: 20px;
+    font-weight: 600;
+  }
+  
+  .card {
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: #ebf4ff;
+    color: #4c51bf;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  .day{
+    font-size: 26px;
+    margin-bottom: 20px;
+  }
+  .title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #2d3748;
+    margin-bottom: 10px;
+  }
+  
+  .time {
+    color: #a0aec0;
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+  }
+  
+  .content {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #4a5568;
+    min-height: 200px;
+    white-space: pre-wrap; /* 줄바꿈 유지 */
+  }
+  
+  .footer {
+    margin-top: 50px;
+    display: flex;
+    gap: 10px;
+    border-top: 1px solid #edf2f7;
+    padding-top: 30px;
+  }
+  
+  .editBtn, .deleteBtn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  
+  .editBtn {
+    background: #4c51bf;
+    color: white;
+  }
+  
+  .deleteBtn {
+    background: #fff;
+    color: #e53e3e;
+    border: 1px solid #fed7d7;
+  }

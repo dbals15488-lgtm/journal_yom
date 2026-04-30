@@ -1,0 +1,38 @@
+.calendarContainer{
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    margin-top: 2rem;
+}
+
+.dayGrid{
+    display: grid;
+    /* 일씩 한줄로 배치 */
+    grid-template-columns: repeat(7, 1fr); 
+    gap: 12px;
+    margin-top: 1.5rem;
+}
+
+.dayButton{
+    padding: 15px 10px;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.dayButton:hover{
+    background: #f7fafc;
+    border-color: #4c51bf;
+}
+
+/* 선택된 날짜에 입힐 파란색 옷 */
+.activeDay{
+    background: #4c51df;
+    color: white;
+    border-color: #5c51bf;
+    box-shadow: 0 4px 12px rgba(76, 81, 191, 0.3);
+}
