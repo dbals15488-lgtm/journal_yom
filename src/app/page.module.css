@@ -100,6 +100,7 @@
 }
   .dateTag{
     display: inline-block;
+    margin-right: 20px;
   }
   
   .recordCard {

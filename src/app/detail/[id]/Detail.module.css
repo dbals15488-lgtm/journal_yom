@@ -64,7 +64,7 @@
     padding-top: 30px;
   }
   
-  .editBtn, .deleteBtn {
+  .editBtn, .deleteBtn, .back2Btn {
     padding: 12px 24px;
     border-radius: 10px;
     border: none;
@@ -72,13 +72,27 @@
     cursor: pointer;
   }
   
-  .editBtn {
-    background: #4c51bf;
-    color: white;
-  }
-  
+ 
   .deleteBtn {
     background: #fff;
     color: #e53e3e;
     border: 1px solid #fed7d7;
+    transition: all 0.3s;
+  }
+
+  .back2Btn,.editBtn{
+    background: #fff;
+    border: 1px solid #4c51bf;
+    color: #4c51bf;
+    transition: all 0.3s;
+  }
+
+  .back2Btn:hover,.editBtn:hover{
+    background: #4c51bf;
+    color: white;
+  }
+
+  .deleteBtn:hover{
+    background: #e53e3e;
+    color: #fff;
   }
