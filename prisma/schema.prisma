@@ -1,22 +1,23 @@
 // prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  provider = "mysql" // postgresql에서 mysql로 변경
+  url      = env("DATABASE_URL")
 }
 
-// 이게 바로 우리가 만들 '기록' 수납함입니다! 테이블 칸(Column 컬럼) 이름입니다.
 model Record {
-  id        Int      @id @default(autoincrement()) // 각 기록의 고유 번호 (1, 2, 3...)
-  title     String   // 제목
-  content   String   @db.Text // 내용 (긴 글을 쓸 수 있게 설정)
-  category  String   // 카테고리 (예: 운동, 공부)
-  createdAt DateTime @default(now()) // 작성 시간 (자동으로 현재 시간 저장)
-  updatedAt DateTime @updatedAt      // 수정 시간 (수정할 때마다 자동 갱신)
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @db.Text
+  category  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  fileUrl String?
+
+  @@map("Record")
 }

@@ -1,0 +1,231 @@
+/* app/diary/diary.css */
+.diary-container { padding: 2rem; max-width: 1000px; margin: 0 auto; }
+.diary-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+
+/* 캘린더 그리드 */
+.calendar-grid { 
+  display: grid; 
+  grid-template-columns: repeat(7, 1fr); 
+  gap: 10px; 
+  background: white; 
+  padding: 20px; 
+  border-radius: 15px;
+}
+.day { 
+  height: 60px; 
+  border: 1px solid #eee; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center; 
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+}
+.day.active { background-color: #ebf5ff; border-color: #3b82f6; font-weight: bold; }
+.star { font-size: 10px; color: gold; position: absolute; top: 5px; right: 5px; }
+
+/* 글쓰기 모드 레이아웃 */
+.write-section { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+.write-title { width: 100%; padding: 1rem; margin-bottom: 1rem; border: 1px solid #ddd; border-radius: 8px; }
+.write-content { width: 100%; height: 300px; padding: 1rem; border: 1px solid #ddd; border-radius: 8px; }
+.save-btn { background: #3b82f6; color: white; padding: 1rem 2rem; border: none; border-radius: 8px; cursor: pointer; margin-top: 1rem; }
+
+/* 버튼 공통 스타일 */
+.back-btn, .write-open-btn, .save-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+/* 메인으로 버튼 */
+.back-btn {
+  background-color: #f3f4f6;
+  color: #374151;
+}
+.back-btn:hover { background-color: #e5e7eb; }
+
+/* 새 일지 작성 버튼 */
+.write-open-btn {
+  background-color: #6366f1;
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.4);
+  margin-bottom: 20px;
+}
+.write-open-btn:hover {
+  background-color: #4f46e5;
+  transform: translateY(-2px);
+}
+
+/* 캘린더 날짜 박스 꾸미기 */
+.day {
+  border: 1px solid #f0f0f0;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background 0.2s;
+}
+.day:hover { background-color: #f9fafb; }
+.day.active {
+  border: 2px solid #6366f1;
+  background-color: #eef2ff;
+}
+
+/* 리스트 섹션 텍스트 */
+.list-section h3 {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin-bottom: 15px;
+  border-left: 4px solid #6366f1;
+  padding-left: 10px;
+}
+
+.record-header {
+  display: flex;
+  justify-content: space-between; /* 제목은 왼쪽, 버튼은 오른쪽 */
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.item-btns {
+  display: flex;
+  gap: 8px; /* 버튼 사이 간격 */
+}
+
+.edit-btn, .delete-btn {
+  padding: 4px 8px;
+  font-size: 14px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  background: white;
+  cursor: pointer;
+}
+
+.edit-btn:hover { background: #fff; color: #6366f1; border-color: #6366f1; }
+
+
+.record-text-group{
+  display: flex;
+  width: 85%;
+  height: 30px;
+}
+
+.record-text-group h4 {
+  margin-right: 20px;
+  width: 25%;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+}
+
+.record-text-group div {
+    width: 75%;
+    overflow: hidden;
+    white-space: normal;
+    text-overflow: ellipsis;
+}
+
+.record-item{
+  display: "flex";
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  position: relative;
+  padding: 20px;
+  border-bottom: 1px solid #8cb8ff;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+.record-item:hover{
+  border: 2px solid #3b82f6;
+  border-radius: 10px;
+}
+
+.record-item.active{
+  border: 1px solid #3b82f6;
+  border-radius: 10px;
+}
+
+.view-btn{
+  margin-right: 8px;
+  background: #fff;
+  color: #6366f1;
+  border: 1px solid #3b82f6;
+  border-radius: 5px;
+  padding: 7px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.view-btn:hover{
+  background:#3b82f6; 
+  color: #fff;
+   border:1px solid #3b82f6;
+}
+
+.delete-btn{
+    color: #e53e3e;
+    background: #fff;
+    border: 1px solid #e53e3e;
+    transition: all .3s;
+    padding: 7px 10px;
+    font-weight: bold;
+}
+
+.delete-btn:hover { 
+  background:#e53e3e; 
+  color: #fff;
+   border:1px solid #e53e3e;
+  }
+
+  .calendar-selector {
+    display: flex;
+    gap: 10px;                  
+    margin-bottom: 20px;        
+    justify-content: flex-start; 
+}
+
+.calendar-selector select {
+    padding: 8px 32px 8px 12px; 
+    font-size: 16px;            
+    font-weight: 600;           
+    color: #4a5568;             
+    background-color: #ffffff;  
+    border: 1px solid #e2e8f0;  
+    border-radius: 8px;         
+    cursor: pointer;            
+    outline: none;              
+    
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234a5568'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center; 
+    background-size: 16px;      
+    
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.calendar-selector select:hover {
+    border-color: #cbd5e1;      
+}
+
+.calendar-selector select:focus {
+    border-color: #6366f1;      
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1); 
+}
+
+.file_upload_box{
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}

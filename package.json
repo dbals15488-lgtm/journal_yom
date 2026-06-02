@@ -9,6 +9,8 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@toast-ui/editor": "^3.2.2",
+    "@toast-ui/react-editor": "^3.2.3",
     "next": "16.2.4",
     "react": "19.2.4",
     "react-dom": "19.2.4"
@@ -16,9 +18,12 @@
   "devDependencies": {
     "@prisma/client": "^5.12.1",
     "@tailwindcss/postcss": "^4",
+    "@types/node": "^25.7.0",
+    "@types/react": "^19.2.14",
     "eslint": "^9",
     "eslint-config-next": "16.2.4",
     "prisma": "^5.12.1",
-    "tailwindcss": "^4"
+    "tailwindcss": "^4",
+    "typescript": "^6.0.3"
   }
 }

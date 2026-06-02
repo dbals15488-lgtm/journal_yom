@@ -27,6 +27,7 @@
 .dayButton:hover{
     background: #f7fafc;
     border-color: #4c51bf;
+    color: #4c51bf;
 }
 
 /* 선택된 날짜에 입힐 파란색 옷 */

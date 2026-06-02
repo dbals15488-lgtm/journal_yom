@@ -14,14 +14,14 @@ import HabitEditor from '@/components/HabitEditor/HabitEditor';
 
 export default function Home() {
   
-  // 상태(state) 만들기 : 현재 어떤 달을 보고 있는지?
+  // 상태 만들기 : 현재 어떤 달을 보고 있는지?
   const today = new Date()
   const [ selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1); // 지금 몇월인지 기록
   const [selectedYear, setSelectedYear] = useState(today.getFullYear()) // 년도 기록
   const [selectedDay, setSelectedDay] = useState(null)
   
 
-  // 중요! 모든 기록을 담는 저장소 (배열)
+  // 모든 기록을 담는 저장소 (배열)
   
 
   const [dbRecords, setDbRecords] = useState([]); //빈배열 

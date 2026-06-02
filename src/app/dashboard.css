@@ -1,0 +1,87 @@
+/* app/dashboard.css */
+
+.container {
+    min-height: 100vh;
+    background-color: #f9fafb; 
+    padding: 2rem;
+  }
+  
+  .header {
+    max-width: 1200px;
+    margin: 0 auto 2.5rem auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  
+  .title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0;
+  }
+  
+  .subtitle {
+    color: #4b5563;
+    margin-top: 0.5rem;
+  }
+  
+  .login-status {
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    border: 1px solid #f3f4f6;
+    font-size: 0.875rem;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  }
+  
+  .menu-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .card {
+    background-color: white;
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid #f3f4f6;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: all 0.2s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+  }
+  
+  .card-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    transition: transform 0.2s ease;
+  }
+  
+  .card:hover .card-icon {
+    transform: scale(1.1);
+  }
+  
+  .card-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0 0 0.25rem 0;
+  }
+  
+  .card-desc {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }

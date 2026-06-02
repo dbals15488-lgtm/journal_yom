@@ -1,6 +1,6 @@
 import "./globals.css";
 
-import { RecordProvider } from "@/context/RecordContext";
+import { RecordProvider } from "../context/RecordContext";
 
 export default function RootLayout({ children }) {
   return (

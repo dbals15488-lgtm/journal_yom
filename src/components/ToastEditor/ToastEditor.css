@@ -1,0 +1,33 @@
+.toast-editor-wrapper .toastui-editor-tabs{
+    display: none !important;
+}
+
+.toastui-editor-md-tab-container{
+    display: none !important;
+}
+
+.custom-editor-tabs {
+    display: flex;
+    justify-content: flex-end;
+    background: #f7f9fc;
+    border: 1px solid #dadde1;
+    border-top: none;
+    padding: 8px 16px;
+    gap: 8px;
+}
+
+.custom-tab-btn {
+    padding: 4px 12px;
+    font-size: 13px;
+    border: 1px solid #ccc;
+    background: #fff;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.custom-tab-btn.active {
+    background: #4e73df;
+    color: white;
+    border-color: #4e73df;
+    font-weight: bold;
+}

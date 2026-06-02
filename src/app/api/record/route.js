@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";  //프리즈마 클라이언트 �
 import { NextResponse } from "next/server"; // 응답 도구 호출
 
 
+
 const prisma = new PrismaClient()
 
 
