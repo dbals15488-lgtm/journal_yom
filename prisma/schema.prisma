@@ -1,13 +1,14 @@
 // prisma/schema.prisma
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider = "mysql" // postgresql에서 mysql로 변경
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = "postgresql://postgres.kjstzjqwqstglbcyskk:0114252544as@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres?pgbouncer=true"
+  directUrl = "postgresql://postgres:0114252544as@db.kjstzjqwqstglbcyskk.supabase.co:5432/postgres"
 }
 
 model Record {
