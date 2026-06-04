@@ -1,12 +1,14 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient } from '@prisma/client';
 
-// 개발 환경에서 여러 번 생성되는 것을 방지하는 로직입니다.
-const globalForPrisma = global;
+const prismaClientSingleton = () => {
+  return new PrismaClient();
+};
 
-export const prisma =
-  globalForPrisma.prisma ||
-  new PrismaClient({
-    log: ['query'], // 터미널에서 실제 날아가는 쿼리를 볼 수 있어 에러 잡기 좋습니다.
-  })
+const globalForPrisma = globalThis;
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+// 이미 만들어진 prisma 인스턴스가 있다면 재사용하고, 없으면 새로 만듭니다.
+const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
+
+export default prisma;
+
+if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;

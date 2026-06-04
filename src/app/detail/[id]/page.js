@@ -6,6 +6,7 @@ import styles from './Detail.module.css';
 import { updateDiary } from '../../diary/actions'; 
 import dynamic from 'next/dynamic';
 
+
 // 에디터 비동기 로드 구역
 const ToastEditor = dynamic(() => import("../../../components/ToastEditor/ToastEditor"), {
   ssr: false,
