@@ -25,5 +25,10 @@
     "prisma": "^5.12.1",
     "tailwindcss": "^4",
     "typescript": "^6.0.3"
+  },
+  "npm": {
+    "rc": {
+      "legacy-peer-deps": true
+    }
   }
 }
