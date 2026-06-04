@@ -1,6 +1,6 @@
 "use server"; // 서버에서만 실행하도록
 
-import { prisma } from "./lib/prisma";
+import prisma  from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
 
 // 1. 일지 목록 가져기
