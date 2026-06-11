@@ -229,3 +229,30 @@
   flex-direction: column;
   font-size: 14px;
 }
+
+.Show.HTML.source{
+  width: 40px;
+}
+
+.ql-htmlEdit {
+  width: auto !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+  border: none !important;
+  border-radius: 3px;
+  padding: 0 4px !important;
+  background-color: #fff !important;
+}
+
+.ql-htmlEdit::after {
+  content: 'HTML' !important;
+}
+
+.html-mode .ql-htmlEdit {
+  color: #1e88e5 !important;
+  border: 1px solid #1e88e5 !important;
+  background-color: #e3f2fd !important;
+}
+
+

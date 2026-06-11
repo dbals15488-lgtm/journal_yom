@@ -230,6 +230,13 @@
     color: #a0aec0;
     margin: 4px 0;
 }
+.time2 {
+    font-size: 13px;
+    color: #a0aec0;
+    margin: 4px 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
 
 .content {
     font-size: 16px;
@@ -316,4 +323,48 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
+}
+.ql-htmlEdit {
+  width: auto !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+  border: none !important;
+  border-radius: 3px;
+  padding: 0 4px !important;
+  background-color: #fff !important;
+}
+
+.ql-htmlEdit::after {
+  content: 'HTML' !important;
+  
+}
+
+.html-mode .ql-htmlEdit {
+  color: #1e88e5 !important;
+  border: 1px solid #1e88e5 !important;
+  background-color: #e3f2fd !important;
+}
+
+:global(.ql-htmlEdit) {
+  width: auto !important;
+  font-size: 11px !important;
+  font-weight: bold !important;
+  color: #333 !important;
+  border: none !important;
+  border-radius: 3px;
+  padding: 0 4px !important;
+  background-color: #fff !important;
+  display: inline-block !important; 
+}
+
+:global(.ql-htmlEdit::after) {
+  content: 'HTML' !important;
+  display: inline-block !important;
+}
+
+:global(.html-mode .ql-htmlEdit) {
+  color: #1e88e5 !important;
+  border: 1px solid #1e88e5 !important;
+  background-color: #e3f2fd !important;
 }

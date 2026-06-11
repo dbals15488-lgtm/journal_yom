@@ -1,0 +1,154 @@
+/* 회원가입 페이지 전체 배경 */
+.container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9fafb;
+    padding: 48px 16px;
+  }
+  
+  /* 하얀색 회원가입 네모 박스 */
+  .card {
+    max-width: 440px;
+    width: 100%;
+    background-color: #ffffff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  }
+  
+  /* 상단 타이틀 구역 */
+  .header {
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 8px;
+  }
+  
+  .subtitle {
+    font-size: 14px;
+    color: #4b5563;
+  }
+  
+  /* 입력창 양식 구역 */
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #111827;
+    outline: none;
+    box-sizing: border-box;
+  }
+  
+  .input:focus {
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+  }
+  
+  /* 가입하기 버튼 */
+  .submitButton {
+    width: 100%;
+    padding: 10px;
+    background-color: #4f46e5;
+    color: #ffffff;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  
+  .submitButton:hover {
+    background-color: #4338ca;
+  }
+  
+  /* 구분선 구역 */
+  .dividerContainer {
+    margin-top: 24px;
+    position: relative;
+    text-align: center;
+  }
+  
+  .dividerLine {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    border-top: 1px solid #e5e7eb;
+    z-index: 1;
+  }
+  
+  .dividerText {
+    position: relative;
+    z-index: 2;
+    background-color: #ffffff;
+    padding: 0 8px;
+    font-size: 14px;
+    color: #6b7280;
+  }
+  
+  /* 소셜 로그인 버튼 그룹 */
+  .socialGroup {
+    margin-top: 24px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  
+  .socialButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 6px;
+    cursor: pointer;
+    border: none;
+  }
+  
+  .google {
+    background-color: #ffffff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
+  .google:hover { background-color: #f9fafb; }
+  
+  .kakao {
+    background-color: #fee500;
+    color: #000000;
+  }
+  .kakao:hover { background-color: #fdd835; }
+  
+  .naver {
+    background-color: #03c75a;
+    color: #ffffff;
+  }
+  .naver:hover { background-color: #02b34f; }

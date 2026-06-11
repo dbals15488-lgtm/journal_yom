@@ -1,6 +1,8 @@
 import React from "react";
 import Link from "next/link";
 import './dashboard.css';
+import { auth } from "../auth";
+
 
 
 interface MenuCardProps{
@@ -19,7 +21,9 @@ const MenuCard = ({icon, title, description, href} : MenuCardProps) =>(
 );
 
 
-export default function HomePage(){
+export default async function HomePage(){
+    const session = await auth();
+
     return(
         <div className="container">
             <header className="header">
@@ -28,7 +32,19 @@ export default function HomePage(){
                     <p className="subtitle">오늘의 성장을 기록하고 관리하세요.</p>
                 </div>
                 <div className="Login-status">
-                   👤 로그인 해주세요
+                {session?.user ? (
+                        <div style={{ display: "flex", gap: "10px", alignItems: "flex-end",flexDirection:'column' }}>
+                            <span>👤 {session.user.name}님 환영합니다</span>
+                            {/* 나중에 로그아웃 기능 연결을 위한 링크 미리 배치 */}
+                            <Link href="/api/auth/signout" className="logout-btn" style={{ fontSize: '12px', color: '#999', textDecoration: 'underline' }}>
+                                로그아웃
+                            </Link>
+                        </div>
+                    ) : (
+                        <Link href="/login" style={{ textDecoration: "none", color: "inherit" }}>
+                            👤 로그인 해주세요
+                        </Link>
+                    )}
                 </div>
             </header>
 

@@ -1,25 +1,32 @@
 // prisma/schema.prisma
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["driverAdapters"]
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = "postgresql://postgres.kjstzjqwqstglbcyskk:0114252544as@aws-1-ap-northeast-1.pooler.supabase.co:6543/postgres?pgbouncer=true"
-  directUrl = "postgresql://postgres:0114252544as@db.kjstzjqwqstglbcyskk.supabase.co:5432/postgres"
-  
+  provider = "postgresql" 
+  url      = env("DATABASE_URL")
 }
 
 model Record {
   id        Int      @id @default(autoincrement())
   title     String
-  content   String   @db.Text
+  content   String 
   category  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   fileUrl String?
 
   @@map("Record")
+}
+
+model User {
+  id        Int      @id @default(autoincrement()) 
+  userId    String   @unique                       
+  name      String                                 
+  email     String   @unique                       
+  password  String                                 
+  createdAt DateTime @default(now())               
 }
