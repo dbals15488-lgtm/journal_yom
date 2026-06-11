@@ -18,9 +18,13 @@ model Record {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   fileUrl String?
+  userId    Int      
+  user      User     @relation(fields: [userId], references: [id])
 
   @@map("Record")
 }
+
+
 
 model User {
   id        Int      @id @default(autoincrement()) 
@@ -28,5 +32,7 @@ model User {
   name      String                                 
   email     String   @unique                       
   password  String                                 
-  createdAt DateTime @default(now())               
+  createdAt DateTime @default(now())     
+
+  records   Record[]          
 }

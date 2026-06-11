@@ -63,13 +63,9 @@ export default function DiaryPage() {
     const formatHtmlSource = (htmlString: string) => {
         if (!htmlString) return "";
         return htmlString
-            // 기존에 들어가 있을지 모르는 모든 줄바꿈 문자를 제거하여 한 줄로 압축한 뒤
             .replace(/\n/g, "")
-            // 블록 태그가 닫힐 때(</p>, </div>, </h1>, <br/> 등) 뒤에 강제로 개행문자(\n)를 붙여줍니다.
             .replace(/(<\/p>|<\/div>|<\/h1>|<\/h2>|<\/blockquote>|<\/pre>|<br\s*\/?>)/gi, "$1\n")
-            // 블록 태그가 시작될 때 (<p>, <div>, <h1> 등) 앞단에 개행문자(\n)를 붙여줍니다. (단, 첫 시작은 제외)
             .replace(/(<p>|<p\s[^>]*>|<div>|<div\s[^>]*>|<h1>|<h2>|<blockquote>|<pre>)/gi, "\n$1")
-            // 연속된 개행문자(\n\n)가 생길 경우 하나로 정제합니다.
             .replace(/\n+/g, "\n")
             .trim();
     };
@@ -100,11 +96,15 @@ export default function DiaryPage() {
 
     useEffect(() => {
         async function fetchLogs() {
-            const data = await getDiaryList();
-            setRecords(data);
+            if (session) {
+                const data = await getDiaryList();
+                setRecords(data);
+            } else {
+                setRecords([]);
+            }
         }
         fetchLogs();
-    }, [])
+    }, [session]);
 
     const hasRecord = (day: number) => {
         return records.some(record => {
@@ -266,7 +266,16 @@ export default function DiaryPage() {
                                     ))}
                                 </div>
                             </div>
-                            <button className="write-open-btn" onClick={() => setIsWriting(true)}>새 일지 작성하기</button>
+                            <button className="write-open-btn" 
+                            onClick={() => {
+                                if (!session){
+                                    alert("로그인이 필요한 서비스입니다.");
+                                    window.location.href = "/login"
+                                    return
+                                }
+                                setIsWriting(true)
+                            }}>
+                                새 일지 작성하기</button>
                         </section>
 
                         {/* 리스트 영역 */}

@@ -31,7 +31,7 @@ export default function RegisterPage() {
     }
 
     // 비밀번호 검사
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRegex.test(password)) {
         alert("비밀번호는 영문자와 숫자를 조합하여 8글자 이상으로 입력해 주세요.");
         return;
