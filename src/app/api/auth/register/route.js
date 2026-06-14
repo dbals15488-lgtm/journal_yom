@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs'; // 'bcrypt' 대신 'bcryptjs' 사용 추천 (배포 환경에서 에러가 적음)
-import prisma from "@/lib/prisma"; 
+import prisma from "../../../../lib/prisma";
 
 export async function POST(request) {
   try {

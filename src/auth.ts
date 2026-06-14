@@ -1,4 +1,3 @@
-// auth.ts 전체 교체용 코드
 
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
