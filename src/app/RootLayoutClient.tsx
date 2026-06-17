@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from "react";
 import { RecordProvider } from "../context/RecordContext";
 import { Providers } from "./providers";

@@ -1,3 +1,5 @@
+'use client'
+
 import { style } from 'framer-motion/client'
 import styles from './Header.module.css'
 import Link from 'next/link'
