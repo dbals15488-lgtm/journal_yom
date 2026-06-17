@@ -33,3 +33,42 @@
     right: 40px;
     top: 70px;
   }
+
+  .modalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+  }
+  
+  .modalContent {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .onbtn,.offbtn{
+    padding: 10px;
+    border: 1px solid #6366f1;
+    text-align: center;
+    background: #fff;
+    margin: 10px 10px 0;
+    cursor: pointer;
+    color: #6366f1;
+    width: 60px;
+  }
+
+  .onbtn:hover,.offbtn:hover{
+    background: #6366f1;
+    color: #fff;
+    font-weight: bold;
+  }
+
+  
