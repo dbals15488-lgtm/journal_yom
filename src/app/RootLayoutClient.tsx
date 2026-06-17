@@ -1,4 +1,3 @@
-'use client'; // 상태 관리는 여기서 담당
 import { useState } from "react";
 import { RecordProvider } from "../context/RecordContext";
 import { Providers } from "./providers";
@@ -13,7 +12,7 @@ export default function RootLayoutClient({ children, session }) {
   return (
     <Providers>
       <RecordProvider>
-        <Header session={session} /> {/* 부모가 넘겨준 session을 Header로 전달! */}
+        <Header session={session} /> 
         <div style={{ display: 'flex' }}>
           <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
           <main style={{ flex: 1 }}>{children}</main>
