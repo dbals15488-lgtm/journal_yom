@@ -203,26 +203,7 @@ export default function DiaryPage() {
           
 
             <header className="diary-header">
-                <button onClick={() => window.location.href = "/"} className="back-btn">⬅ 메인으로</button>
                 <h1>오늘의 일지</h1>
-                <div className="user-info">
-                    {status === "loading" ? (
-                        <span>⏳ 확인 중...</span>
-                    ) : session?.user ? (
-                        <div style={{ display: "flex", gap: "10px", alignItems: "flex-end",flexDirection:'column' }}>
-                            <span>👤 {session.user.name || (session.user as any).userId || "유저"} 님</span>
-                             <Link href="/api/auth/signout" className="logout-btn" style={{ fontSize: '12px', color: '#999', textDecoration: 'underline' }}>
-                                로그아웃
-                            </Link>
-                        </div>
-                       
-                        
-                    ) : (
-                        <Link href="/login" style={{ color: "#ff4d4f", fontWeight: "bold", textDecoration: 'none' }}>⚠️ 로그인이 필요합니다.</Link>
-                    )
-
-                    }
-                </div>
             </header>
 
             <main className="diary-content">
