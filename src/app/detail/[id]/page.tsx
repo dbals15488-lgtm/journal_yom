@@ -19,7 +19,7 @@ const ReactQuill = dynamic(
   }
 );
 
-const modules = {
+const modules: any = {
   toolbar: {
     container: [
       ["htmlEdit"],
