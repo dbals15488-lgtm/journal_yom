@@ -42,7 +42,7 @@ const modules = {
 
 const formats = [
     'font', 'size', 'bold', 'italic', 'underline', 'strike', 'color', 'background',
-    'script', 'header', 'blockquote', 'code-block', 'list', 'bullet', 'indent', 'direction', 'align', 'link', 'image', 'video'
+    'script', 'header', 'blockquote', 'code-block', 'list', 'indent', 'direction', 'align', 'link', 'image', 'video'
 ];
 
 export default function DiaryPage() {
@@ -51,7 +51,7 @@ export default function DiaryPage() {
     // 상태 관리
     const [selectedDate, setSelectedDate] = useState(() => new Date());
     const [viewDate, setViewDate] = useState(() => new Date());
-    const [selectedFile, setSelectedFile] = useState<File | null>(null); 
+    const [selectedFile, setSelectedFile] = useState<File[]>([]); 
     
     const [isWriting, setIsWriting] = useState(false);
     const [records, setRecords] = useState<any[]>([]);
@@ -124,36 +124,25 @@ export default function DiaryPage() {
             return
         }
 
-        let uploadedFileUrl: string | null = null;
+        let uploadedFileUrls: string[] = [];
         
-        if (selectedFile) {
-            try {
+        if (selectedFile && selectedFile.length > 0) {
+            for (const file of selectedFile) {
                 const formData = new FormData();
-                formData.append("file", selectedFile);
-
-                const response = await fetch("/api/upload", {
-                    method: "POST",
-                    body: formData,
-                });
-                if (!response.ok) {
-                    throw new Error("파일 업로드 서버 에러")
-                }
-
-                const uploadResult = await response.json();
-                uploadedFileUrl = uploadResult.fileUrl;
-            } catch (err) {
-                alert("파일 업로드 도중 오류가 발생했습니다.")
-                console.error(err)
+                formData.append("file", file);
+                const response = await fetch("/api/upload", { method: "POST", body: formData });
+                const data = await response.json();
+                if (data.fileUrl) uploadedFileUrls.push(data.fileUrl); 
             }
         }
 
-        const result = await createDiary(title, content, selectedDate.toISOString(), uploadedFileUrl);
+        const result = await createDiary(title, content, selectedDate.toISOString(), uploadedFileUrls);
 
         if (result.success) {
             alert("일지가 성공적으로 저장되었습니다.")
             setTitle("");
             setContent(""); 
-            setSelectedFile(null);
+            setSelectedFile([]);
             setIsWriting(false);
             setIsHtmlMode(false); 
             const updatedData = await getDiaryList();
@@ -183,14 +172,16 @@ export default function DiaryPage() {
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             const file = e.target.files[0];
-            const maxSize = 5 * 1024 * 1024;
-            if (file.size > maxSize) {
-                alert("파일 크기는 5MB 이하의 파일만 업로드할 수 있습니다.")
-                e.target.value = '';
-                setSelectedFile(null);
-                return
+          
+            if(selectedFile.length >= 3) {
+                alert("파일은 최대 3개까지만 등록 가능합니다.");
+                return;
             }
-            setSelectedFile(file);
+            if(file.size > 5 * 1024 * 1024){
+                alert("5MB 이하 파일만 가능합니다.")
+                return;
+            }
+            setSelectedFile((prev) => [...prev, file])
         }
     };
 
@@ -344,12 +335,26 @@ export default function DiaryPage() {
                         {/* 하단 버튼 및 파일 업로드 */}
                         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                             <div className="file_upload_box">
-                                <input 
+                              <div className="file-list" style={{ marginBottom: '10px' }}>
+                                {selectedFile.map((file, idx) => (
+                                    <div key={idx} style={{ fontSize: '12px', marginBottom: '4px' }}>
+                                    📄 {file.name} 
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setSelectedFile(prev => prev.filter((_, i) => i !== idx))}
+                                        style={{ marginLeft: '10px', cursor: 'pointer' }}
+                                    >삭제</button>
+                                </div>
+                                ))}
+                              </div>
+                              <input 
                                     type="file" 
                                     className="file-upload"
                                     onChange={handleFileChange}
-                                /> 
-                                <span style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>*파일은 5MB 이하만 등록이 가능합니다.</span>
+                                />
+                                <span style={{ color: 'red', fontSize: '12px', marginLeft: '10px' }}>
+                                    *파일은 5MB 이하, 최대 3개까지 등록이 가능합니다.
+                                </span>
                             </div>
                             
                             <div>
@@ -357,7 +362,7 @@ export default function DiaryPage() {
                                 <button className="delete-btn" onClick={() => {
                                     setTitle("");
                                     setContent("");
-                                    setSelectedFile(null);
+                                    setSelectedFile([]);
                                     setIsWriting(false);
                                     setIsHtmlMode(false);
                                 }}>취소</button>

@@ -2,7 +2,7 @@ import { auth } from "../auth";
 import RootLayoutClient from "./RootLayoutClient";
 
 export default async function RootLayout({ children }) {
-  const session = await auth(); // 여기서 서버 세션을 가져옵니다.
+  const session = await auth(); 
 
   return (
     <html lang="ko">

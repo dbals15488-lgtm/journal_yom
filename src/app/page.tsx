@@ -28,8 +28,8 @@ export default async function HomePage(){
         <div className="container">
             <header className="header">
                 <div>
-                    <h1 className="title">Learning Log</h1>
-                    <p className="subtitle">오늘의 성장을 기록하고 관리하세요.</p>
+                    {/* <h1 className="title">Learning Log</h1> */}
+                    <p className="subtitle">당신의 성장을 기록하고 관리하세요.</p>
                 </div>
              
             </header>
