@@ -25,7 +25,16 @@ model Record {
   @@map("Record")
 }
 
-
+model WorkoutRecord {
+  id          Int      @id @default(autoincrement())
+  date        DateTime // 운동 날짜
+  workoutName String   // 운동 이름
+  reps        Int      // 횟수
+  sets        Int      // 세트 수
+  restTime    Int      // 휴식 시간 (분)
+  userId      String   // 사용자 연결용
+  createdAt   DateTime @default(now())
+}
 
 model User {
   id        Int      @id @default(autoincrement()) 

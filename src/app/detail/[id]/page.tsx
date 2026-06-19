@@ -175,7 +175,7 @@ export default function RecordDetailPage() {
   }
 
   return (
-    <div className={isHtmlMode ? "html-mode" : ""} style={{ maxWidth: "800px", margin: "40px auto", padding: "20px" }}>
+    <div className={isHtmlMode ? "html-mode" : ""} style={{ maxWidth: "1000px", margin: "40px auto", padding: "20px" }}>
       <nav className={styles.nav}>
         <button onClick={() => router.push("/diary")} className={styles.backBtn}>← 목록으로 돌아가기</button>
       </nav>
@@ -230,8 +230,11 @@ export default function RecordDetailPage() {
         ) : (
           <>
             <header>
-              <div className={styles.badge}>번호 : #{record.id}</div>
+              <div className={styles.top_Num_box}>
               <p className={styles.time}>최종 작성 일자 : {record.updatedAt ? new Date(record.updatedAt).toLocaleString() : ""}</p>
+              <div className={styles.badge}>번호 : #{record.id}</div>
+              </div>
+              
               <h2 className={styles.title}>{record.title}</h2>
             </header>
 

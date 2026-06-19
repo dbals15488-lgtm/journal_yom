@@ -3,26 +3,84 @@
 .diary-header { display: flex; justify-content: center; align-items: center; margin-bottom: 2rem; }
 
 /* 캘린더 그리드 */
+/* --- 캘린더 영역 전체 스타일 --- */
+.calendar-wrapper {
+  background: white;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 30px;
+}
+
+/* 7열 그리드 설정 (정석 캘린더 형태) */
 .calendar-grid { 
   display: grid; 
   grid-template-columns: repeat(7, 1fr); 
-  gap: 10px; 
-  background: white; 
-  padding: 20px; 
-  border-radius: 15px;
+  gap: 1px; /* 셀 사이의 선 두께 */
+  background: #e9f2fc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
 }
+
+/* 요일 헤더 디자인 */
+.calendar-weekday {
+  background-color: #f8fafc;
+  padding: 12px 0;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #64748b;
+}
+
+.calendar-weekday:nth-child(7){
+  color: #1e88e5;
+}
+.calendar-weekday:nth-child(1){
+  color: #ff4d4d;
+}
+
+/* 날짜 셀 디자인 */
 .day { 
-  height: 60px; 
-  border: 1px solid #eee; 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  justify-content: center;
+  background-color: white;
+  min-height: 90px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
   cursor: pointer;
+  transition: background 0.2s;
+  font-size: 0.9rem;
+  color: #334155;
   position: relative;
 }
-.day.active { background-color: #ebf5ff; border-color: #3b82f6; font-weight: bold; }
-.star { font-size: 10px; color: gold; position: absolute; top: 5px; right: 5px; }
+
+.day:hover {
+  background-color: #f1f5f9;
+}
+
+.day.active {
+  background-color: #eff6ff !important;
+  color: #2563eb;
+  font-weight: bold;
+  position: relative;
+}
+
+/* 기록 표시 별 스타일 */
+.star {
+  font-size: 14px;
+  color: #f59e0b;
+  margin-top: 5px;
+  position: absolute;
+  top: 1px;
+  right: 20px;
+}
+
+.calendar-temp{
+  margin-bottom: 30px;
+}
 
 /* 글쓰기 모드 레이아웃 */
 .write-section { background: white; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }

@@ -218,24 +218,36 @@ export default function DiaryPage() {
                                     >
                                         {months.map(m => <option key={m} value={m}>{m + 1}월</option>)}
                                     </select>
+                                    {/* <h3 style={{ textAlign: "center", margin: "15px 0" }}>{viewDate.getFullYear()}년 {viewDate.getMonth() + 1}월</h3> */}
                                 </div>
-                                <h1 style={{ textAlign: "center", margin: "15px 0" }}>{viewDate.getMonth() + 1}월</h1>
+                                
 
                                 <div className="calendar-grid">
-                                    {[...Array(daysInMonth)].map((_, i) => (
-                                        <div
-                                            key={i}
-                                            className={`day ${
-                                                selectedDate.getFullYear() === viewDate.getFullYear() &&
-                                                selectedDate.getMonth() === viewDate.getMonth() &&
-                                                selectedDate.getDate() === i + 1 ? 'active' : ''
-                                            }`}
-                                            onClick={() => setSelectedDate(new Date(viewDate.getFullYear(), viewDate.getMonth(), i + 1))}
-                                        >
-                                            {i + 1}
-                                            {hasRecord(i + 1) && <span className="star">⭐</span>}
-                                        </div>
+                                    {['일', '월', '화', '수', '목', '금', '토'].map(day => (
+                                        <div key={day} className="calendar-weekday">{day}</div>
                                     ))}
+
+                                    {[...Array(new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay())].map((_, i) => (
+                                        <div key={`empty-${i}`} className="day" style={{ cursor: 'default' }} />
+                                    ))}
+
+                                    {[...Array(daysInMonth)].map((_, i) => {
+                                        const day = i + 1;
+                                        return (
+                                            <div
+                                                key={day}
+                                                className={`day ${
+                                                    selectedDate.getFullYear() === viewDate.getFullYear() &&
+                                                    selectedDate.getMonth() === viewDate.getMonth() &&
+                                                    selectedDate.getDate() === day ? 'active' : ''
+                                                }`}
+                                                onClick={() => setSelectedDate(new Date(viewDate.getFullYear(), viewDate.getMonth(), day))}
+                                            >
+                                                {hasRecord(day) && <span className="star">★</span>}
+                                                {day}
+                                            </div>
+                                        );
+                                    })}
                                 </div>
                             </div>
                             <button className="write-open-btn" 

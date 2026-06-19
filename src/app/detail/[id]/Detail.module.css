@@ -223,6 +223,8 @@
     color: #1a202c;
     margin: 12px 0;
     font-weight: 700;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
 }
 
 .time {
@@ -237,7 +239,10 @@
     border-bottom: 1px solid #ddd;
     padding-bottom: 10px;
 }
-
+.top_Num_box{
+  display: flex;
+  justify-content: space-between;
+}
 .content {
     font-size: 16px;
     line-height: 1.8;
