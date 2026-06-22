@@ -5,7 +5,7 @@ export default async function RootLayout({ children }) {
   const session = await auth(); 
 
   return (
-    <html lang="ko">
+    <html lang="ko" suppressHydrationWarning={true}>
       <body>
         <RootLayoutClient session={session}>
           {children}

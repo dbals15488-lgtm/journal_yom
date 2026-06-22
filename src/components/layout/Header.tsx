@@ -17,7 +17,9 @@ export default  function Header({session}){
 
     return(
         <header className={styles.header}>
-            <div>기록 일지</div>
+            <Link href="/" style={{color:"#000", textDecoration:'none'}}>
+              <img src="/images/logo.png" alt='logo' style={{width:"160px",height:"auto"}} />
+            </Link>
 
             <div className={styles.midSection}>{time}</div>
 

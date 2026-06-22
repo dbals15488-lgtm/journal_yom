@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState ,useMemo} from "react"
 import "./diary.css";
 import { getDiaryList, createDiary, deleteDiary } from "./actions"
 import Link from "next/link";
@@ -9,7 +9,10 @@ import { useSession } from "next-auth/react";
 
 // Turbopack 환경에 안전하게 에디터 기본 CSS 로드
 import "react-quill-new/dist/quill.snow.css";
-
+import { DayPicker } from "react-day-picker";
+import 'react-day-picker/dist/style.css'
+import { format } from 'date-fns';
+import { ko } from 'date-fns/locale';
 
 // 💡 1. Next.js 환경에서 React-Quill 안전하게 로드
 const ReactQuill = dynamic(
@@ -52,6 +55,7 @@ export default function DiaryPage() {
     const [selectedDate, setSelectedDate] = useState(() => new Date());
     const [viewDate, setViewDate] = useState(() => new Date());
     const [selectedFile, setSelectedFile] = useState<File[]>([]); 
+    const [isLoaded, setIsLoaded] = useState(false);
     
     const [isWriting, setIsWriting] = useState(false);
     const [records, setRecords] = useState<any[]>([]);
@@ -59,6 +63,9 @@ export default function DiaryPage() {
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [isHtmlMode, setIsHtmlMode] = useState(false);
+
+    const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+    const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
 
     const formatHtmlSource = (htmlString: string) => {
         if (!htmlString) return "";
@@ -88,7 +95,6 @@ export default function DiaryPage() {
     }
 
     // 년도/월 데이터 계산
-    const currentYear = new Date().getFullYear();
     const yearRange = Array.from({ length: 7 }, (_, i) => currentYear - 3 + i); 
     const months = Array.from({ length: 12 }, (_, i) => i); 
 
@@ -99,21 +105,13 @@ export default function DiaryPage() {
             if (session) {
                 const data = await getDiaryList();
                 setRecords(data);
-            } else {
-                setRecords([]);
+                setIsLoaded(true)
             }
         }
         fetchLogs();
     }, [session]);
 
-    const hasRecord = (day: number) => {
-        return records.some(record => {
-            const recordDate = new Date(record.createdAt);
-            return recordDate.getFullYear() === viewDate.getFullYear() &&
-                   recordDate.getMonth() === viewDate.getMonth() &&
-                   recordDate.getDate() === day;
-        })
-    }
+  
 
     // 저장 처리 함수 (MySQL DB 연동)
     const handleSave = async () => {
@@ -189,6 +187,24 @@ export default function DiaryPage() {
         setViewDate(new Date(year, month, 1));
     };
 
+    const hasRecord = (date: Date) => {
+        // 날짜 유효성 검사 (안전을 위해)
+        if (!date || isNaN(date.getTime())) return false;
+        
+        // records 배열 내에 해당 날짜와 일치하는 기록이 있는지 확인
+        return records.some(record => {
+          if (!record?.createdAt) return false;
+          const recordDate = new Date(record.createdAt);
+          return (
+            recordDate.getFullYear() === date.getFullYear() &&
+            recordDate.getMonth() === date.getMonth() &&
+            recordDate.getDate() === date.getDate()
+          );
+        });
+      };
+
+
+
     return (
         <div className="diary-container">
           
@@ -202,53 +218,29 @@ export default function DiaryPage() {
                     <>
                         {/* 달력 영역 */}
                         <section className="calender-section">
-                            <div className="calendar-temp">
-                                <div className="calendar-selector">
-                                    <select 
-                                        value={viewDate.getFullYear()} 
-                                        onChange={(e) => handleViewChange(Number(e.target.value), viewDate.getMonth())}
-                                        className="calendar-select-dropdown"
-                                    >
-                                        {yearRange.map(y => <option key={y} value={y}>{y}년</option>)}
-                                    </select>
-                                    <select 
-                                        value={viewDate.getMonth()} 
-                                        onChange={(e) => handleViewChange(viewDate.getFullYear(), Number(e.target.value))}
-                                        className="calendar-select-dropdown"
-                                    >
-                                        {months.map(m => <option key={m} value={m}>{m + 1}월</option>)}
-                                    </select>
-                                    {/* <h3 style={{ textAlign: "center", margin: "15px 0" }}>{viewDate.getFullYear()}년 {viewDate.getMonth() + 1}월</h3> */}
-                                </div>
-                                
-
-                                <div className="calendar-grid">
-                                    {['일', '월', '화', '수', '목', '금', '토'].map(day => (
-                                        <div key={day} className="calendar-weekday">{day}</div>
+                        <div className="calendar-temp">
+                            <div className="calendar-controls">
+                                <select value={currentYear} onChange={(e) => setCurrentYear(Number(e.target.value))}>
+                                    {[2025, 2026, 2027].map(y => <option key={y} value={y}>{y}년</option>)}
+                                </select>
+                                <select value={currentMonth} onChange={(e) => setCurrentMonth(Number(e.target.value))}>
+                                    {Array.from({length: 12}, (_, i) => i).map(m => (
+                                    <option key={m} value={m}>{m + 1}월</option>
                                     ))}
-
-                                    {[...Array(new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay())].map((_, i) => (
-                                        <div key={`empty-${i}`} className="day" style={{ cursor: 'default' }} />
-                                    ))}
-
-                                    {[...Array(daysInMonth)].map((_, i) => {
-                                        const day = i + 1;
-                                        return (
-                                            <div
-                                                key={day}
-                                                className={`day ${
-                                                    selectedDate.getFullYear() === viewDate.getFullYear() &&
-                                                    selectedDate.getMonth() === viewDate.getMonth() &&
-                                                    selectedDate.getDate() === day ? 'active' : ''
-                                                }`}
-                                                onClick={() => setSelectedDate(new Date(viewDate.getFullYear(), viewDate.getMonth(), day))}
-                                            >
-                                                {hasRecord(day) && <span className="star">★</span>}
-                                                {day}
-                                            </div>
-                                        );
-                                    })}
+                                </select>
                                 </div>
+
+                                {/* 달력 컴포넌트 */}
+                                <DayPicker
+                                    key={isLoaded ? `loaded-${records.length}` : 'loading'} 
+                                    mode="single"
+                                    selected={selectedDate}
+                                    onSelect={(day) => day && setSelectedDate(day)}
+                                    month={new Date(currentYear, currentMonth)}
+                                    locale={ko}
+                                    modifiers={{ hasRecord: hasRecord }}
+                                    modifiersClassNames={{ hasRecord: 'has-record' }}
+                                />
                             </div>
                             <button className="write-open-btn" 
                             onClick={() => {
