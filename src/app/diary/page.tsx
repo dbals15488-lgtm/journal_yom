@@ -188,13 +188,15 @@ export default function DiaryPage() {
     };
 
     const hasRecord = (date: Date) => {
-        // 날짜 유효성 검사 (안전을 위해)
         if (!date || isNaN(date.getTime())) return false;
         
-        // records 배열 내에 해당 날짜와 일치하는 기록이 있는지 확인
         return records.some(record => {
           if (!record?.createdAt) return false;
+          
           const recordDate = new Date(record.createdAt);
+          
+          if (isNaN(recordDate.getTime())) return false;
+          
           return (
             recordDate.getFullYear() === date.getFullYear() &&
             recordDate.getMonth() === date.getMonth() &&
@@ -291,7 +293,7 @@ export default function DiaryPage() {
                     /* 작성 폼 영역 */
                     <section className="write-section">
                         <div className="write-header"><h2 style={{ marginBottom: '10px' }}>일지 작성하기</h2></div>
-                        <input type="text" placeholder="제목을 입력하세요" className="write-title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                        <input type="text" placeholder="제목을 입력해주세요" className="write-title" value={title} onChange={(e) => setTitle(e.target.value)} />
 
                         <div 
                         className={isHtmlMode ? "html-mode" : ""}

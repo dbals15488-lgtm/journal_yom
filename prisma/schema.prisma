@@ -27,12 +27,12 @@ model Record {
 
 model WorkoutRecord {
   id          Int      @id @default(autoincrement())
-  date        DateTime // 운동 날짜
-  workoutName String   // 운동 이름
-  reps        Int      // 횟수
-  sets        Int      // 세트 수
-  restTime    Int      // 휴식 시간 (분)
-  userId      String   // 사용자 연결용
+  date        DateTime
+  workoutName String
+  reps        Int
+  sets        Int
+  restTime    String   
+  userId      String
   createdAt   DateTime @default(now())
 }
 
