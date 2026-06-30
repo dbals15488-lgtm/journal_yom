@@ -3,37 +3,96 @@
 import prisma from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
 
-// 운동 일지 저장
-// actions.ts
-export async function createWorkout(data: any, date: Date) {
+interface WorkoutInput{
+  part: string;
+  name: string;
+  reps: number | string;
+  sets: number | string;
+  restTime: string; 
+}
+
+function validateInput(data: WorkoutInput[]): string | null {
+  for ( const item of data) {
+    if (!item.part?.trim() || !item.name?.trim() || !item.restTime?.trim()){
+      return "모든 항목을 입력해주세요.";
+    }
+    if (!Number(item.reps) || Number(item.reps) <= 0 || !Number(item.sets) || Number(item.sets) <= 0){
+      return "횟수와 세트 수를 올바르게 입력해주세요."
+    }
+  }
+  return null;
+}
+
+export async function createWorkout(data: WorkoutInput[], date: Date) {
+  const error = validateInput(data);
+
+  if(error) return { success: false, massage: error};
+
   try {
     await prisma.workoutRecord.createMany({
-      data: data.map((item: any) => ({
-        workoutName: item.name,
+      data: data.map((item) => ({
+        part: item.part.trim(),
+        workoutName: item.name.trim(),
         reps: Number(item.reps),
         sets: Number(item.sets),
-        restTime: item.restTime,
-        date: date,
-        userId: "user_id_here",
+        restTime: item.restTime.trim(),
+        date,
+        userId: "user_id_here", 
       })),
     });
     revalidatePath("/workout");
     return { success: true };
   } catch (error) {
-    console.error("저장 에러:", error);
+    console.error("createWorkout error:", error);
+    return { success: false, message: "저장 중 오류가 발생했습니다." };
+  }
+}
+
+export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]){
+  const error = validateInput(data);
+  if(error) return { success: false, message: error};
+
+  try {
+    await prisma.$transaction([
+      prisma.workoutRecord.deleteMany({ where: { date } }),
+      prisma.workoutRecord.createMany({
+        data: data.map((item) => ({
+          part: item.part.trim(),
+          workoutName: item.name.trim(),
+          reps: Number(item.reps),
+          sets: Number(item.sets),
+          restTime: item.restTime.trim(),
+          date,
+          userId: "user_id_here",
+        })),
+      }),
+    ]);
+    revalidatePath("/workout");
+    return { success: true };
+  } catch (error) {
+    console.error("updateWorkoutsForDate error:", error);
+    return { success: false, message: "수정 중 오류가 발생했습니다." };
+  }
+}
+
+
+
+export async function deleteWorkoutsByDate(date: Date) {
+  try {
+    await prisma.workoutRecord.deleteMany({ where: { date } });
+    revalidatePath("/workout");
+    return { success: true };
+  } catch (error) {
+    console.error("deleteWorkoutsByDate error:", error);
     return { success: false };
   }
 }
 
-// 운동 일지 삭제
-export async function deleteWorkout(id: number) {
-  await prisma.workoutRecord.delete({
-    where: { id : id }
-  });
-  revalidatePath("/workout");
-}
-
 export async function fetchWorkouts() {
-  const data = await prisma.workoutRecord.findMany();
-  return data;
+  try {
+    return await prisma.workoutRecord.findMany({ orderBy: { date: "asc" } });
+  } catch (error) {
+    console.error("fetchWorkouts error:", error);
+    return [];
+  }
 }

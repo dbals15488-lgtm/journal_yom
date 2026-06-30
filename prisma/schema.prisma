@@ -28,6 +28,7 @@ model Record {
 model WorkoutRecord {
   id          Int      @id @default(autoincrement())
   date        DateTime
+  part        String   
   workoutName String
   reps        Int
   sets        Int

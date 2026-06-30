@@ -211,6 +211,7 @@
   color: #6366f1 !important;
   border: 1px solid #3b82f6 !important;
   margin-right: 10px;
+  height: 39px;
 }
 
 .view-btn:hover {
@@ -221,6 +222,7 @@
 .delete-btn {
   color: #e53e3e !important;
   border-color: #e53e3e !important;
+  height: 39px;
 }
 
 .delete-btn:hover {

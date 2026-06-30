@@ -13,6 +13,16 @@
 .modal-content {
   background: white;
   padding: 30px;
+  width: 1100px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  z-index: 10000;
+}
+
+.modal-content2 {
+  background: white;
+  padding: 30px;
   width: 600px;
   height: auto;
   border-radius: 12px;
@@ -50,46 +60,11 @@
   align-items: center;
 }
 
-.btn-add {
-  background: #6366f1;
-  color: white;
-  border: none;
-  padding: 5px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.btn-remove {
-  background: #e53e3e;
-  color: white;
-  border: none;
-  padding: 5px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-.delete-btn {
-  height: 49px;
-}
-
-.btn-save {
-  width: 100px;
-  padding: 15px;
-  background: #fff;
-  color: #223498;
-  border: 1px solid #223498;
-  border-radius: 8px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
 .btn-save:hover{
   background: #223498;
   color: #fff;
 }
-
-/* workout.css */
-/* workout.css */
+/* 캘린더 스타일 */
 .rdp-day {
   width: 100px !important;
   height: 100px !important;
@@ -103,7 +78,6 @@
   width: 100%;
   height: 100%;
   position: relative;
-  z-index: 1;
 }
 
 .day-number {
@@ -117,11 +91,72 @@
   width: 90%;
   margin-top: 5px;
   gap: 2px;
+  position: absolute;
+  top: 5px;
 }
 
 .workout-item {
-  display: block; 
   font-size: 10px;
-  color: blue;
+  color: #fff;
+  background: #8385ff;
+  padding: 2px;
+  border-radius: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.workout-row input {
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  flex: 1;
+}
+
+/* 버튼 스타일 */
+.btn-add { background: #fff; color: #6366f1; border: 1px solid #6366f1; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;}
+.btn-add:hover { background: #6366f1; color: white; }
+.btn-remove { background: #fff; color: #e53e3e; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; border: 1px solid #e53e3e;font-weight: bold;}
+.btn-remove:hover{background: #e53e3e;color: #fff;}
+.btn-save {  padding: 10px 15px; background: #fff; color: #223498; border: 1px solid #223498; border-radius: 5px; font-weight: bold; cursor: pointer; }
+.btn-plus-box{
+  display: flex;
+  justify-content: flex-start;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.btn-delete-small {
+  font-size: 12px;
+  color: #e53e3e;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.form-error {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 8px;
+  font-weight: 500;
+}
+
+.btn-close {
+  background: #fff;
+  color: #555;
+  border: 1px solid #ccc;
+  padding: 5px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn-close:hover {
   background: #f0f0f0;
 }
