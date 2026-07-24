@@ -1,70 +1,55 @@
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999; /* 매우 높은 값 설정 */
-}
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  width: 1100px;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  z-index: 10000;
-}
-
-.modal-content2 {
-  background: white;
-  padding: 30px;
-  width: 600px;
-  height: auto;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-  z-index: 10000;
-}
-
+/* ================================
+   레이아웃
+================================ */
 .workout-container {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
 }
 
-.workout-row {
+/* ================================
+   캘린더 네비게이션
+================================ */
+.calendar-nav {
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
   align-items: center;
-  padding: 10px;
-  border-bottom: 1px solid #eee;
+  gap: 8px;
+  padding: 0 8px 16px 8px;
 }
 
-.workout-row input {
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  flex: 1;
+.nav-select {
+  padding: 8px 32px 8px 12px;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4a5568;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  cursor: pointer;
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%234a5568'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  margin-right: 10px;
 }
 
-.rdp-root{
+.nav-select:hover {
+  background-color: #eef2ff;
+  border-radius: 6px;
+}
+
+/* ================================
+   캘린더 날짜 칸
+================================ */
+.rdp-root {
   margin-bottom: 30px;
 }
 
-.btn_box {
-  align-items: center;
-}
-
-.btn-save:hover{
-  background: #223498;
-  color: #fff;
-}
-/* 캘린더 스타일 */
 .rdp-day {
   width: 100px !important;
   height: 100px !important;
@@ -83,6 +68,8 @@
 .day-number {
   font-weight: bold;
   margin-top: 5px;
+  position: relative;
+  z-index: 1;
 }
 
 .workout-preview {
@@ -106,6 +93,39 @@
   text-overflow: ellipsis;
 }
 
+/* ================================
+   작성 모달 (새 일지 입력 폼)
+================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  width: 1100px;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  z-index: 10000;
+}
+
+.workout-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
 
 .workout-row input {
   padding: 8px;
@@ -114,49 +134,322 @@
   flex: 1;
 }
 
-/* 버튼 스타일 */
-.btn-add { background: #fff; color: #6366f1; border: 1px solid #6366f1; padding: 10px 15px; border-radius: 5px; cursor: pointer; margin-right: 10px;}
-.btn-add:hover { background: #6366f1; color: white; }
-.btn-remove { background: #fff; color: #e53e3e; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; border: 1px solid #e53e3e;font-weight: bold;}
-.btn-remove:hover{background: #e53e3e;color: #fff;}
-.btn-save {  padding: 10px 15px; background: #fff; color: #223498; border: 1px solid #223498; border-radius: 5px; font-weight: bold; cursor: pointer; }
-.btn-plus-box{
+/* ================================
+   상세 모달
+================================ */
+.modal-content2 {
+  z-index: 10000;
+  background: #fff;
+  border-radius: 16px;
+  width: 620px;
+  max-height: 80vh;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  gap: 16px;
+  overflow: hidden;
 }
 
-.detail-item {
+.detail-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
 }
 
-.btn-delete-small {
+.detail-date-block {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.detail-date-main {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a202c;
+  letter-spacing: -0.5px;
+}
+
+.detail-date-sub {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.detail-count-badge {
+  background: #eef2ff;
+  color: #4338ca;
   font-size: 12px;
-  color: #e53e3e;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  align-self: flex-start;
+  margin-top: 4px;
+}
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  flex: 1;
+  padding-right: 4px;
+}
+
+.detail-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #f8faff;
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  padding: 14px 16px;
+  transition: box-shadow 0.15s;
+}
+
+.detail-card:hover {
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.detail-card-index {
+  width: 24px;
+  height: 24px;
+  background: #e0e7ff;
+  color: #4338ca;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.detail-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.detail-card-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-part-tag {
+  background: #6366f1;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.detail-exercise-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.detail-card-stats {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+.detail-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* ================================
+   수정 모달
+================================ */
+.edit-modal {
+  width: 620px;
+  max-height: 82vh;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 28px;
+  overflow: hidden;
+}
+
+.edit-card {
+  background: #f8faff;
+  border: 1px solid #e8edf5;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: box-shadow 0.15s;
+}
+
+.edit-card:hover {
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+}
+
+.edit-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.edit-card-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 700;
+  color: #334155;
+}
+
+.edit-delete-btn {
   background: none;
   border: none;
+  color: #cbd5e1;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.edit-delete-btn:hover {
+  color: #e53e3e;
+  background: #fff0f0;
+}
+
+.edit-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.edit-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 120px;
+}
+
+.edit-field-sm {
+  flex: 0 0 90px;
+  min-width: 0;
+}
+
+.edit-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #94a3b8;
+  letter-spacing: 0.4px;
+}
+
+.edit-input {
+  padding: 8px 10px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #1e293b;
+  background: #fff;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+}
+
+/* ================================
+   공통 버튼
+================================ */
+.btn-add {
+  background: #fff;
+  color: #6366f1;
+  border: 1px solid #6366f1;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn-add:hover {
+  background: #6366f1;
+  color: white;
+}
+
+.btn-remove {
+  background: #fff;
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.btn-remove:hover {
+  background: #e53e3e;
+  color: #fff;
+}
+
+.btn-save {
+  padding: 10px 15px;
+  background: #fff;
+  color: #223498;
+  border: 1px solid #223498;
+  border-radius: 5px;
+  font-weight: bold;
   cursor: pointer;
 }
 
-.form-error {
-  color: #e53e3e;
-  font-size: 13px;
-  margin-top: 8px;
-  font-weight: 500;
+.btn-save:hover {
+  background: #223498;
+  color: #fff;
 }
 
 .btn-close {
   background: #fff;
   color: #555;
   border: 1px solid #ccc;
-  padding: 5px 15px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
 }
+
 .btn-close:hover {
   background: #f0f0f0;
+}
+
+/* ================================
+   폼 에러 메시지
+================================ */
+.form-error {
+  color: #e53e3e;
+  font-size: 13px;
+  margin-top: 8px;
+  font-weight: 500;
 }

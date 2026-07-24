@@ -1,0 +1,136 @@
+/* 식단 모달 크기 */
+.diet-modal {
+    width: 720px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 28px;
+    overflow: hidden;
+  }
+  
+  /* 총 칼로리 상단 뱃지 */
+  .calorie-total-badge {
+    background: #fef3c7;
+    color: #b45309;
+    font-size: 14px;
+    font-weight: 800;
+    padding: 6px 14px;
+    border-radius: 999px;
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  
+  /* 캘린더의 칼로리 뱃지 */
+  .calorie-badge {
+    font-size: 10px;
+    color: #fff;
+    background: #f59e0b;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  /* 식단 카드 */
+  .diet-card {
+    background: #f8faff;
+    border: 1px solid #e8edf5;
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .diet-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* 식사 구분 select */
+  .meal-select {
+    padding: 4px 12px;
+    border-radius: 999px;
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    flex-shrink: 0;
+  }
+  
+  .diet-input-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+  
+  .diet-input-row .edit-field {
+    flex: 1;
+  }
+  
+  /* AI 계산 버튼 */
+  .btn-ai {
+    background: linear-gradient(135deg, #8b5cf6 0%, #6366f1 100%);
+    color: #fff;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s, transform 0.15s;
+    height: 38px;
+  }
+  
+  .btn-ai:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+  
+  .btn-ai:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+  
+  /* 영양소 입력 줄 */
+  .diet-nutrition-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  
+  .diet-nutrition-row .edit-field {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  /* 상세 모달 (식단용) */
+.diet-detail-modal {
+    width: 620px;
+    height: auto;
+    max-height: 80vh;
+  }
+  
+  /* 상세 카드의 식사구분 태그 색상 (하얀 글씨) */
+  .diet-detail-modal .detail-part-tag {
+    color: #fff !important;
+  }
+  
+  .detail-amount {
+    color: #94a3b8;
+    font-size: 13px;
+    font-weight: 500;
+    margin-left: 4px;
+  }
+  
+  .stat-calorie {
+    background: #fef3c7 !important;
+    border-color: #fcd34d !important;
+    color: #b45309 !important;
+    font-weight: 700 !important;
+  }

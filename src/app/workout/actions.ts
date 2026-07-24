@@ -23,10 +23,18 @@ function validateInput(data: WorkoutInput[]): string | null {
   return null;
 }
 
+function getDayRange(date: Date) {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+  return { gte: start, lte: end };
+}
+
 export async function createWorkout(data: WorkoutInput[], date: Date) {
   const error = validateInput(data);
 
-  if(error) return { success: false, massage: error};
+  if(error) return { success: false, message: error};
 
   try {
     await prisma.workoutRecord.createMany({
@@ -48,13 +56,17 @@ export async function createWorkout(data: WorkoutInput[], date: Date) {
   }
 }
 
-export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]){
+
+
+export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]) {
   const error = validateInput(data);
-  if(error) return { success: false, message: error};
+  if (error) return { success: false, message: error };
 
   try {
     await prisma.$transaction([
-      prisma.workoutRecord.deleteMany({ where: { date } }),
+      prisma.workoutRecord.deleteMany({
+        where: { date: getDayRange(date) },
+      }),
       prisma.workoutRecord.createMany({
         data: data.map((item) => ({
           part: item.part.trim(),
@@ -75,11 +87,11 @@ export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]){
   }
 }
 
-
-
 export async function deleteWorkoutsByDate(date: Date) {
   try {
-    await prisma.workoutRecord.deleteMany({ where: { date } });
+    await prisma.workoutRecord.deleteMany({
+      where: { date: getDayRange(date) },
+    });
     revalidatePath("/workout");
     return { success: true };
   } catch (error) {

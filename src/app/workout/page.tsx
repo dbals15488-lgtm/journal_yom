@@ -52,6 +52,9 @@ export default function WorkoutPage() {
   const [savedWorkouts, setSavedWorkouts] = useState<SavedWorkout[]>([]);
   const [workouts, setWorkouts] = useState<WorkoutRow[]>([emptyRow()]);
 
+  const [viewYear, setViewYear] = useState(new Date().getFullYear());
+  const [viewMonth, setViewMonth] = useState(new Date().getMonth());
+
   const isSameDate = (d1: Date, d2: Date) => format(d1, "yyyy-MM-dd") === format(d2, "yyyy-MM-dd");
 
   const loadData = async () => {
@@ -168,6 +171,8 @@ export default function WorkoutPage() {
     setIsEditing(false);
   };
 
+
+
   // --- 캘린더 날짜 칸 커스텀 ---
   function CustomDayButton({ day, modifiers, ...buttonProps }: DayButtonProps) {
     const dayWorkouts = savedWorkouts.filter((w) => isSameDate(w.date, day.date));
@@ -183,13 +188,13 @@ export default function WorkoutPage() {
               openDetail(day.date, dayWorkouts);
             }}
           >
-            {dayWorkouts.slice(0, 3).map((w) => (
+            {dayWorkouts.slice(0, 1).map((w) => (
               <div key={w.id} className="workout-item">
                 <b>{w.part}</b>
               </div>
             ))}
-            {dayWorkouts.length > 3 && (
-              <div className="workout-item">+{dayWorkouts.length - 3}개 더보기</div>
+            {dayWorkouts.length > 1 && (
+              <div className="workout-item">+{dayWorkouts.length - 1}개 더보기</div>
             )}
           </div>
         )}
@@ -204,10 +209,40 @@ export default function WorkoutPage() {
       </header>
 
       <section className="calender-section">
+        <div className="calendar-nav">
+
+          <div className="nav-center">
+            <select
+              className="nav-select"
+              value={viewYear}
+              onChange={(e) => setViewYear(Number(e.target.value))}
+            >
+              {Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - 3 + i).map((y) => (
+                <option key={y} value={y}>{y}년</option>
+              ))}
+            </select>
+            <select
+              className="nav-select"
+              value={viewMonth}
+              onChange={(e) => setViewMonth(Number(e.target.value))}
+            >
+              {Array.from({ length: 12 }, (_, i) => i).map((m) => (
+                <option key={m} value={m}>{m + 1}월</option>
+              ))}
+            </select>
+          </div>
+
+        </div>
+
         <DayPicker
           mode="single"
           selected={selectedDate}
           onSelect={(day) => { if (day) setSelectedDate(day); }}
+          month={new Date(viewYear, viewMonth)}  
+          onMonthChange={(date) => {             
+            setViewYear(date.getFullYear());
+            setViewMonth(date.getMonth());
+          }}
           components={{ DayButton: CustomDayButton }}
           locale={ko}
         />
@@ -218,24 +253,48 @@ export default function WorkoutPage() {
 
       {/* 상세 모달: 수정 / 삭제(전체) / 닫기 */}
       {detailModal && (
-        <div className="modal-overlay" onClick={() => setDetailModal(null)}>
-          <div className="modal-content2" onClick={(e) => e.stopPropagation()}>
-            <h2>{format(selectedDate, "yyyy.MM.dd")}</h2>
-            {detailModal.map((w) => (
-              <div key={w.id} className="detail-item">
-                <p>
-                  {w.part} - 운동: {w.workoutName} / ({w.reps}회 × {w.sets}세트) 휴식 {w.restTime}분
-                </p>
+  <div className="modal-overlay" onClick={() => setDetailModal(null)}>
+        <div className="modal-content2" onClick={(e) => e.stopPropagation()}>
+
+          {/* 날짜 헤더 */}
+          <div className="detail-header">
+            <div className="detail-date-block">
+              <span className="detail-date-main">{format(selectedDate, "yyyy. MM. dd")}</span>
+              <span className="detail-date-sub">{format(selectedDate, "EEEE", { locale: ko })}</span>
+            </div>
+            <span className="detail-count-badge">{detailModal.length}개 운동</span>
+          </div>
+
+          {/* 운동 목록 */}
+          <div className="detail-list">
+            {detailModal.map((w, i) => (
+              <div key={w.id} className="detail-card">
+                <div className="detail-card-index">{i + 1}</div>
+                <div className="detail-card-body">
+                  <div className="detail-card-top">
+                    <span className="detail-part-tag">{w.part}</span>
+                    <span className="detail-exercise-name">{w.workoutName}</span>
+                  </div>
+                  <div className="detail-card-stats">
+                    <span className="stat-pill">🔁 {w.reps}회</span>
+                    <span className="stat-pill">📦 {w.sets}세트</span>
+                    <span className="stat-pill">⏱ 휴식 {w.restTime}</span>
+                  </div>
+                </div>
               </div>
             ))}
-            <div style={{ marginTop: "16px", display: "flex", gap: "8px", justifyContent:'flex-end' }}>
-              <button onClick={handleOpenEdit} className="btn-save">수정</button>
-              <button onClick={handleDeleteDay} className="btn-remove">삭제</button>
-              <button onClick={() => setDetailModal(null)} className="btn-close">닫기</button>
-            </div>
           </div>
+
+          {/* 버튼 영역 */}
+          <div className="detail-footer">
+            <button onClick={handleOpenEdit} className="btn-save">✏️ 수정</button>
+            <button onClick={handleDeleteDay} className="btn-remove">🗑 삭제</button>
+            <button onClick={() => setDetailModal(null)} className="btn-close">닫기</button>
+          </div>
+
         </div>
-      )}
+      </div>
+    )}
 
       {/* 새 작성 모달 */}
       {isWriting && (
@@ -267,33 +326,101 @@ export default function WorkoutPage() {
       )}
 
       {/* 수정 모달 */}
-      {isEditing && (
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>{format(selectedDate, "yyyy.MM.dd")} 운동 기록 수정</h2>
-            {editWorkouts.map((row) => (
-              <div key={row.id} className="workout-row">
-                <input placeholder="부위" value={row.part} onChange={(e) => handleEditChange(row.id, "part", e.target.value)} />
-                <input placeholder="운동 이름" value={row.name} onChange={(e) => handleEditChange(row.id, "name", e.target.value)} />
-                <input type="number" placeholder="횟수" value={row.reps} onChange={(e) => handleEditChange(row.id, "reps", e.target.value)} />
-                <input type="number" placeholder="세트" value={row.sets} onChange={(e) => handleEditChange(row.id, "sets", e.target.value)} />
-                <input placeholder="휴식 시간 (예: 60초)" value={row.restTime} onChange={(e) => handleEditChange(row.id, "restTime", e.target.value)} />
-                <button className="btn-remove" onClick={() => removeEditRow(row.id)}>×</button>
-              </div>
-            ))}
+   {/* 수정 모달 */}
+{isEditing && (
+  <div className="modal-overlay">
+    <div className="modal-content edit-modal">
 
-            {editFormError && <p className="form-error">{editFormError}</p>}
-
-            <div style={{ marginTop: "20px" }}>
-              <button onClick={addEditRow} className="btn-add">추가</button>
-              <button className="btn-save" onClick={handleUpdate} disabled={isUpdating}>
-                {isUpdating ? "수정 중..." : "수정하기"}
-              </button>
-              <button onClick={() => { setIsEditing(false); setEditFormError(null); }} className="btn-remove">취소</button>
-            </div>
-          </div>
+      {/* 헤더 */}
+      <div className="detail-header">
+        <div className="detail-date-block">
+          <span className="detail-date-main">{format(selectedDate, "yyyy. MM. dd")}</span>
+          <span className="detail-date-sub">운동 기록 수정</span>
         </div>
-      )}
+        <span className="detail-count-badge">{editWorkouts.length}개 운동</span>
+      </div>
+
+      {/* 수정 목록 */}
+      <div className="detail-list">
+          {editWorkouts.map((row, i) => (
+            <div key={row.id} className="edit-card">
+              <div className="edit-card-header">
+                <div className="detail-card-index">{i + 1}</div>
+                <span className="edit-card-title">
+                  {row.part || "부위 미입력"} — {row.name || "운동명 미입력"}
+                </span>
+                <button className="edit-delete-btn" onClick={() => removeEditRow(row.id)}>✕</button>
+              </div>
+
+              <div className="edit-fields">
+                <div className="edit-field">
+                  <label className="edit-label">부위</label>
+                  <input
+                    className="edit-input"
+                    placeholder="예: 상체"
+                    value={row.part}
+                    onChange={(e) => handleEditChange(row.id, "part", e.target.value)}
+                  />
+                </div>
+                <div className="edit-field">
+                  <label className="edit-label">운동 이름</label>
+                  <input
+                    className="edit-input"
+                    placeholder="예: 벤치프레스"
+                    value={row.name}
+                    onChange={(e) => handleEditChange(row.id, "name", e.target.value)}
+                  />
+                </div>
+                <div className="edit-field edit-field-sm">
+                  <label className="edit-label">횟수</label>
+                  <input
+                    className="edit-input"
+                    type="number"
+                    placeholder="회"
+                    value={row.reps}
+                    onChange={(e) => handleEditChange(row.id, "reps", e.target.value)}
+                  />
+                </div>
+                <div className="edit-field edit-field-sm">
+                  <label className="edit-label">세트</label>
+                  <input
+                    className="edit-input"
+                    type="number"
+                    placeholder="세트"
+                    value={row.sets}
+                    onChange={(e) => handleEditChange(row.id, "sets", e.target.value)}
+                  />
+                </div>
+                <div className="edit-field edit-field-sm">
+                  <label className="edit-label">휴식 시간</label>
+                  <input
+                    className="edit-input"
+                    placeholder="예: 60초"
+                    value={row.restTime}
+                    onChange={(e) => handleEditChange(row.id, "restTime", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {editFormError && <p className="form-error">{editFormError}</p>}
+
+        {/* 하단 버튼 */}
+        <div className="detail-footer">
+          <button onClick={addEditRow} className="btn-add">+ 추가</button>
+          <button className="btn-save" onClick={handleUpdate} disabled={isUpdating}>
+            {isUpdating ? "수정 중..." : "✏️ 수정하기"}
+          </button>
+          <button onClick={() => { setIsEditing(false); setEditFormError(null); }} className="btn-close">
+            닫기
+          </button>
+        </div>
+
+      </div>
+    </div>
+  )}
     </div>
   );
 }

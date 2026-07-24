@@ -8,7 +8,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL") 
+  // directUrl = env("DIRECT_URL") 
 }
 
 model Record {
@@ -46,4 +46,18 @@ model User {
   createdAt DateTime @default(now())     
 
   records   Record[]          
+}
+
+model DietRecord {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  foodName    String   // 음식명 (예: "닭가슴살")
+  amount      String   // 양 (예: "100g", "1개")
+  protein     Float    // 단백질 (g)
+  fat         Float    // 지방 (g)
+  carbs       Float    // 탄수화물 (g)
+  calories    Float    // 칼로리 (kcal)
+  mealType    String   // 식사 구분 ("아침"/"점심"/"저녁"/"간식")
+  userId      String
+  createdAt   DateTime @default(now())
 }
