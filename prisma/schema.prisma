@@ -61,3 +61,13 @@ model DietRecord {
   userId      String
   createdAt   DateTime @default(now())
 }
+
+model AiChat {
+  id        Int      @id @default(autoincrement())
+  role      String   // "user" or "assistant"
+  content   String   @db.Text  // 긴 텍스트 저장 가능
+  userId    String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}

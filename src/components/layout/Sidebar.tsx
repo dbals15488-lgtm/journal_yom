@@ -15,7 +15,7 @@ export default function Sidebar({isOpen, toggleSidebar}){
         { name: "오늘의 일지", href: "/diary", icon: "📝" },
         { name: "운동 일지", href: "/workout", icon: "🏃‍♂️" },
         { name: "식단 관리", href: "/diet", icon: "🥗" },
-        { name: "고객 센터", href: "/support", icon: "🎧" },
+        { name: "고객 문의", href: "/support", icon: "🎧" },
       ];
     return(
         <motion.aside className={styles.sidebar}
