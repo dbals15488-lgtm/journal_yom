@@ -7,13 +7,10 @@ import { useState, useEffect } from 'react'
 import { signOut } from 'next-auth/react'
 
 export default  function Header({session}){
-    const [time, setTime] =useState('')
+    
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    useEffect(() => {
-        const timer = setInterval(() => setTime(new Date().toLocaleTimeString()), 1000);
-        return () => clearInterval(timer);
-      }, []);
+  
 
     return(
         <header className={styles.header}>
@@ -21,7 +18,7 @@ export default  function Header({session}){
               <img src="/images/logo.png" alt='logo' style={{width:"160px",height:"auto"}} />
             </Link>
 
-            <div className={styles.midSection}>{time}</div>
+            
 
             <div className={styles.rightSection}>
                 {session?.user ? (

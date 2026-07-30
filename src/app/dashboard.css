@@ -1,87 +1,705 @@
-/* app/dashboard.css */
+/* ============================
+   대시보드 레이아웃
+============================ */
+.dashboard {
+  padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
+  background: #f8fafc;
+  min-height: calc(100vh - 60px);
+}
 
-.container {
-    min-height: 100vh;
-    background-color: #f9fafb; 
-    padding: 2rem;
-  }
-  
-  .header {
-    max-width: 1200px;
-    margin: 0 auto 2.5rem auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-  
-  .title {
-    font-size: 1.875rem;
-    font-weight: 800;
-    color: #111827;
-    margin: 0;
-  }
-  
-  .subtitle {
-    color: #4b5563;
-    margin-top: 0.5rem;
-  }
-  
-  .login-status {
-    background-color: white;
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    border: 1px solid #f3f4f6;
-    font-size: 0.875rem;
-    font-weight: 500;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  }
-  
-  .menu-grid {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-  }
-  
-  .card {
-    background-color: white;
-    padding: 1.5rem;
-    border-radius: 1rem;
-    border: 1px solid #f3f4f6;
-    text-decoration: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    transition: all 0.2s ease;
-  }
-  
-  .card:hover {
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-color: #3b82f6;
-    transform: translateY(-2px);
-  }
-  
-  .card-icon {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    transition: transform 0.2s ease;
-  }
-  
-  .card:hover .card-icon {
-    transform: scale(1.1);
-  }
-  
-  .card-title {
-    font-size: 1.125rem;
-    font-weight: 700;
-    color: #1f2937;
-    margin: 0 0 0.25rem 0;
-  }
-  
-  .card-desc {
-    font-size: 0.875rem;
-    color: #6b7280;
-    margin: 0;
-  }
+.dashboard-header {
+  margin-bottom: 24px;
+}
+
+.dashboard-title {
+  font-size: 26px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0 0 4px 0;
+  letter-spacing: -0.5px;
+}
+
+.dashboard-date {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+/* 3열 그리드 */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 320px 1fr 320px;
+  gap: 20px;
+  align-items: start;
+}
+
+.dashboard-col-left,
+.dashboard-col-center,
+.dashboard-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================
+   공용 카드
+============================ */
+.card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f0f0f5;
+}
+
+.placeholder-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 140px;
+  background: #f8fafc;
+}
+
+.placeholder-large {
+  min-height: 268px;
+}
+
+.placeholder-text {
+  color: #94a3b8;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* ============================
+   프로필 카드
+============================ */
+.profile-card {
+  padding: 24px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #f0f0f5;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  color: #fff;
+  font-size: 24px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.profile-role {
+  font-size: 12px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* 오늘 요약 그리드 */
+.today-summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.summary-item {
+  background: #f8fafc;
+  border-radius: 10px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.summary-item:hover {
+  background: #eef2ff;
+  transform: translateY(-2px);
+}
+
+.summary-item.summary-done {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.summary-item.summary-done .summary-value,
+.summary-item.summary-done .summary-label {
+  color: #059669;
+}
+
+.summary-icon {
+  font-size: 20px;
+}
+
+.summary-label {
+  font-size: 11px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.summary-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+}
+
+.summary-value-sm {
+  font-size: 12px !important;
+}
+
+/* ============================
+   시계 위젯
+============================ */
+.clock-card {
+  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  color: #fff;
+  padding: 30px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  text-align: center;
+}
+
+.clock-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.8);
+  letter-spacing: 0.5px;
+}
+
+.clock-time {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock-ampm {
+  font-size: 14px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.clock-numbers {
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.clock-date {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+/* ============================
+   날씨 위젯
+============================ */
+.weather-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 268px;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  border: 1px solid #bae6fd;
+}
+
+.weather-loading,
+.weather-error {
+  color: #64748b;
+  font-size: 14px;
+  text-align: center;
+  margin: 0;
+  padding: 60px 0;
+}
+
+.weather-main {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.weather-icon-large {
+  font-size: 62px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.weather-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weather-location {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.weather-temp {
+  font-size: 38px;
+  font-weight: 800;
+  color: #0c4a6e;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.weather-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: #0284c7;
+  margin-bottom: 4px;
+}
+
+.weather-minmax {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.weather-max {
+  color: #dc2626;
+}
+
+.weather-min {
+  color: #2563eb;
+}
+
+.weather-section-label {
+  margin-bottom: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #64748b;
+  letter-spacing: 0.3px;
+}
+
+/* 시간별 예보 */
+.weather-hourly {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.weather-hour-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  flex: 1;
+  min-width: 60px;
+}
+
+.weather-hour-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+}
+
+.weather-hour-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+.weather-hour-temp {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0c4a6e;
+}
+
+/* 주간 예보 */
+.weather-weekly {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.weather-day-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  background: rgba(255, 255, 255, 0.6);
+  border-radius: 10px;
+  flex: 1;
+  min-width: 62px;
+}
+
+.weather-day-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0c4a6e;
+}
+
+.weather-day-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.weather-day-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #0284c7;
+  text-align: center;
+  min-height: 14px;
+}
+
+.weather-day-temps {
+  display: flex;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.weather-day-max {
+  color: #dc2626;
+}
+
+.weather-day-min {
+  color: #2563eb;
+}
+
+.weather-day-rain {
+  font-size: 10px;
+  font-weight: 700;
+  color: #2563eb;
+  background: rgba(59, 130, 246, 0.1);
+  padding: 2px 6px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* ============================
+   최근 기록 위젯
+============================ */
+.recent-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.dashboard .dashboard-grid .dashboard-col-right .placeholder-card{
+  padding: 0;
+}
+
+.recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 2px;
+}
+
+.recent-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.recent-loading,
+.recent-empty {
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+  line-height: 1.6;
+}
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recent-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: #f8fafc;
+  transition: background 0.15s, transform 0.15s;
+  text-decoration: none;
+  color: inherit;
+}
+
+.recent-item:hover {
+  background: #eef2ff;
+  transform: translateX(2px);
+}
+
+.recent-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  flex-shrink: 0;
+}
+
+.recent-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.recent-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.recent-type {
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.recent-time {
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.recent-item-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recent-item-subtitle {
+  font-size: 11px;
+  color: #64748b;
+}
+
+/* ============================
+   빠른 액션 위젯
+============================ */
+.quick-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.quick-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.quick-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.quick-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.quick-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 10px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: none;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+  text-decoration: none;
+  color: inherit;
+  font-family: inherit;
+}
+
+.quick-item:hover {
+  background: #eef2ff;
+  transform: translateY(-2px);
+}
+
+.quick-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+}
+
+.quick-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1e293b;
+  text-align: center;
+}
+
+.quick-logout .quick-label {
+  color: #64748b;
+}
+
+/* ============================
+   이번 주 통계 위젯
+============================ */
+.weekly-card {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.weekly-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weekly-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1a202c;
+  margin: 0;
+}
+
+.weekly-loading {
+  font-size: 13px;
+  color: #94a3b8;
+  text-align: center;
+  margin: 0;
+  padding: 20px 0;
+}
+
+.weekly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.weekly-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.weekly-item-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.weekly-item-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weekly-item-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+.weekly-item-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.weekly-item-value {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* 요일별 격자 */
+.weekly-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.weekly-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.weekly-day-box {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 4px;
+  background: #f1f5f9;
+  transition: transform 0.15s;
+}
+
+
+
+.weekly-day-label {
+  font-size: 9px;
+  color: #94a3b8;
+  font-weight: 600;
+}
