@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "../../lib/prisma";
+import { getCurrentUserId } from "../../lib/session";
 
 export interface RecentRecord {
   id: number;
@@ -11,16 +12,26 @@ export interface RecentRecord {
   href: string;
 }
 
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+function toKstDateStr(d: Date): string {
+  return new Date(d.getTime() + KST_OFFSET_MS).toISOString().split("T")[0];
+}
+
 export async function fetchRecentRecords(): Promise<{
   success: boolean;
   data?: RecentRecord[];
   message?: string;
 }> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   try {
-    // 각각 필요한 만큼만 가져오기
     const [latestDiary, latestWorkouts, latestDiets] = await Promise.all([
-      // 일지: 가장 최근 1개
       prisma.record.findFirst({
+        where: { userId },
         orderBy: { createdAt: "desc" },
         select: {
           id: true,
@@ -29,8 +40,8 @@ export async function fetchRecentRecords(): Promise<{
           createdAt: true,
         },
       }),
-      // 운동: 최근 날짜의 모든 항목 (그룹핑용)
       prisma.workoutRecord.findMany({
+        where: { userId },
         orderBy: { date: "desc" },
         take: 20,
         select: {
@@ -39,8 +50,8 @@ export async function fetchRecentRecords(): Promise<{
           date: true,
         },
       }),
-      // 식단: 최근 날짜의 모든 항목 (총 칼로리 계산용)
       prisma.dietRecord.findMany({
+        where: { userId },
         orderBy: { date: "desc" },
         take: 20,
         select: {
@@ -53,7 +64,6 @@ export async function fetchRecentRecords(): Promise<{
 
     const records: RecentRecord[] = [];
 
-    // 일지
     if (latestDiary) {
       records.push({
         id: latestDiary.id,
@@ -65,11 +75,10 @@ export async function fetchRecentRecords(): Promise<{
       });
     }
 
-    // 운동 — 가장 최근 날짜의 것만
     if (latestWorkouts.length > 0) {
-      const latestDate = latestWorkouts[0].date.toISOString().split("T")[0];
+      const latestDateKey = toKstDateStr(latestWorkouts[0].date);
       const sameDayWorkouts = latestWorkouts.filter(
-        (w) => w.date.toISOString().split("T")[0] === latestDate
+        (w) => toKstDateStr(w.date) === latestDateKey
       );
       const parts = [...new Set(sameDayWorkouts.map((i) => i.part))].join(", ");
       records.push({
@@ -82,11 +91,10 @@ export async function fetchRecentRecords(): Promise<{
       });
     }
 
-    // 식단 — 가장 최근 날짜의 총 칼로리
     if (latestDiets.length > 0) {
-      const latestDate = latestDiets[0].date.toISOString().split("T")[0];
+      const latestDateKey = toKstDateStr(latestDiets[0].date);
       const sameDayDiets = latestDiets.filter(
-        (d) => d.date.toISOString().split("T")[0] === latestDate
+        (d) => toKstDateStr(d.date) === latestDateKey
       );
       const totalCal = sameDayDiets.reduce((sum, i) => sum + (i.calories ?? 0), 0);
       records.push({
@@ -99,7 +107,6 @@ export async function fetchRecentRecords(): Promise<{
       });
     }
 
-    // 순서 고정: 일지 → 운동 → 식단
     const typeOrder: Record<RecentRecord["type"], number> = { diary: 0, workout: 1, diet: 2 };
     records.sort((a, b) => typeOrder[a.type] - typeOrder[b.type]);
 

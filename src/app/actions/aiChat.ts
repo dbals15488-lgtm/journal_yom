@@ -2,68 +2,74 @@
 
 import prisma from "../../lib/prisma";
 import { GoogleGenAI } from "@google/genai";
+import { getCurrentUserId } from "../../lib/session";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-// TODO: 나중에 로그인 연동 시 실제 유저ID로 교체
-const CURRENT_USER_ID = "user_id_here";
-
 export interface ChatMessage {
   id: number;
-  role: string; // "user" or "assistant"
+  role: string;
   content: string;
   createdAt: Date;
 }
 
-// 최근 하루 범위
-function getTodayRange() {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date();
-  end.setHours(23, 59, 59, 999);
-  return { gte: start, lte: end };
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+function getTodayRangeKst() {
+  const nowKst = new Date(Date.now() + KST_OFFSET_MS);
+  const startShifted = new Date(nowKst);
+  startShifted.setUTCHours(0, 0, 0, 0);
+  const endShifted = new Date(nowKst);
+  endShifted.setUTCHours(23, 59, 59, 999);
+  return {
+    gte: new Date(startShifted.getTime() - KST_OFFSET_MS),
+    lte: new Date(endShifted.getTime() - KST_OFFSET_MS),
+  };
 }
 
-// 이번 주 범위 (월요일 시작)
-function getWeekRange() {
-  const now = new Date();
-  const day = now.getDay();
+function getWeekRangeKst() {
+  const nowKst = new Date(Date.now() + KST_OFFSET_MS);
+  const day = nowKst.getUTCDay();
   const diff = day === 0 ? 6 : day - 1;
-  const monday = new Date(now);
-  monday.setDate(now.getDate() - diff);
-  monday.setHours(0, 0, 0, 0);
-  const sunday = new Date(monday);
-  sunday.setDate(monday.getDate() + 6);
-  sunday.setHours(23, 59, 59, 999);
+
+  const mondayShifted = new Date(nowKst);
+  mondayShifted.setUTCDate(mondayShifted.getUTCDate() - diff);
+  mondayShifted.setUTCHours(0, 0, 0, 0);
+
+  const monday = new Date(mondayShifted.getTime() - KST_OFFSET_MS);
+  const sunday = new Date(monday.getTime() + 7 * 24 * 60 * 60 * 1000 - 1);
   return { gte: monday, lte: sunday };
 }
 
-// 사용자 컨텍스트 (오늘 + 이번 주 활동 요약)
-async function getUserContext(): Promise<string> {
-  const todayRange = getTodayRange();
-  const weekRange = getWeekRange();
+function getTodayKstStr(): string {
+  return new Date(Date.now() + KST_OFFSET_MS).toISOString().split("T")[0];
+}
+
+async function getUserContext(userId: number): Promise<string> {
+  const todayRange = getTodayRangeKst();
+  const weekRange = getWeekRangeKst();
 
   const [todayDiary, todayWorkouts, todayDiets, weekDiets] = await Promise.all([
     prisma.record.findFirst({
-      where: { createdAt: todayRange },
+      where: { createdAt: todayRange, userId },
       select: { title: true, category: true },
     }),
     prisma.workoutRecord.findMany({
-      where: { date: todayRange },
+      where: { date: todayRange, userId },
       select: { part: true, workoutName: true, reps: true, sets: true },
     }),
     prisma.dietRecord.findMany({
-      where: { date: todayRange },
+      where: { date: todayRange, userId },
       select: { foodName: true, mealType: true, calories: true, protein: true, fat: true, carbs: true },
     }),
     prisma.dietRecord.findMany({
-      where: { date: weekRange },
+      where: { date: weekRange, userId },
       select: { calories: true },
     }),
   ]);
 
   const parts: string[] = [];
-  parts.push(`오늘 날짜: ${new Date().toISOString().split("T")[0]}`);
+  parts.push(`오늘 날짜: ${getTodayKstStr()} (KST 기준)`);
 
   if (todayDiary) {
     parts.push(`오늘 일지: "${todayDiary.title}" (카테고리: ${todayDiary.category})`);
@@ -98,17 +104,21 @@ async function getUserContext(): Promise<string> {
   return parts.join("\n");
 }
 
-// 채팅 기록 조회
 export async function fetchChatHistory(): Promise<{
   success: boolean;
   data?: ChatMessage[];
   message?: string;
 }> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   try {
     const messages = await prisma.aiChat.findMany({
-      where: { userId: CURRENT_USER_ID },
+      where: { userId },
       orderBy: { createdAt: "asc" },
-      take: 50, // 최근 50개만
+      take: 50,
     });
     return { success: true, data: messages };
   } catch (error) {
@@ -117,32 +127,33 @@ export async function fetchChatHistory(): Promise<{
   }
 }
 
-// 메시지 전송 (저장 + AI 응답 + 저장)
 export async function sendChatMessage(userMessage: string): Promise<{
   success: boolean;
   data?: { userMsg: ChatMessage; aiMsg: ChatMessage };
   message?: string;
 }> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   if (!userMessage?.trim()) {
     return { success: false, message: "메시지를 입력해주세요." };
   }
 
   try {
-    // 1. 사용자 메시지 DB 저장
     const userMsg = await prisma.aiChat.create({
       data: {
         role: "user",
         content: userMessage.trim(),
-        userId: CURRENT_USER_ID,
+        userId,
       },
     });
 
-    // 2. 사용자 컨텍스트 조회
-    const context = await getUserContext();
+    const context = await getUserContext(userId);
 
-    // 3. 최근 대화 몇 개 가져와서 컨텍스트에 포함
     const recentMessages = await prisma.aiChat.findMany({
-      where: { userId: CURRENT_USER_ID },
+      where: { userId },
       orderBy: { createdAt: "desc" },
       take: 10,
     });
@@ -151,7 +162,6 @@ export async function sendChatMessage(userMessage: string): Promise<{
       .map((m) => `${m.role === "user" ? "사용자" : "어시스턴트"}: ${m.content}`)
       .join("\n");
 
-    // 4. Gemini에게 요청
     const prompt = `당신은 개인 건강 관리 앱의 친근한 AI 어시스턴트입니다.
 사용자의 일지, 운동, 식단 데이터를 참고해 따뜻하고 실용적인 조언을 해주세요.
 답변은 3~5줄 이내로 간결하게 작성해주세요. 이모지도 적절히 활용해 친근함을 표현하세요.
@@ -171,12 +181,11 @@ ${conversationHistory}
 
     const aiText = response.text?.trim() ?? "죄송해요, 답변을 생성하지 못했어요. 다시 시도해주세요.";
 
-    // 5. AI 답변 DB 저장
     const aiMsg = await prisma.aiChat.create({
       data: {
         role: "assistant",
         content: aiText,
-        userId: CURRENT_USER_ID,
+        userId,
       },
     });
 
@@ -187,11 +196,15 @@ ${conversationHistory}
   }
 }
 
-// 채팅 기록 전체 삭제
 export async function clearChatHistory() {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   try {
     await prisma.aiChat.deleteMany({
-      where: { userId: CURRENT_USER_ID },
+      where: { userId },
     });
     return { success: true };
   } catch (error) {

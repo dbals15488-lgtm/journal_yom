@@ -18,11 +18,12 @@ model Record {
   category  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  fileUrl String[]
+  fileUrl   String[]
   userId    Int      
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("Record")
+  @@index([userId, createdAt])
 }
 
 model WorkoutRecord {
@@ -33,19 +34,11 @@ model WorkoutRecord {
   reps        Int
   sets        Int
   restTime    String   
-  userId      String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
-}
 
-model User {
-  id        Int      @id @default(autoincrement()) 
-  userId    String   @unique                       
-  name      String                                 
-  email     String   @unique                       
-  password  String                                 
-  createdAt DateTime @default(now())     
-
-  records   Record[]          
+  @@index([userId, date])
 }
 
 model DietRecord {
@@ -58,16 +51,34 @@ model DietRecord {
   carbs       Float    // 탄수화물 (g)
   calories    Float    // 칼로리 (kcal)
   mealType    String   // 식사 구분 ("아침"/"점심"/"저녁"/"간식")
-  userId      String
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
+
+  @@index([userId, date])
 }
 
 model AiChat {
   id        Int      @id @default(autoincrement())
   role      String   // "user" or "assistant"
   content   String   @db.Text  // 긴 텍스트 저장 가능
-  userId    String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   createdAt DateTime @default(now())
 
   @@index([userId, createdAt])
+}
+
+model User {
+  id        Int      @id @default(autoincrement()) 
+  userId    String   @unique                       
+  name      String                                 
+  email     String   @unique                       
+  password  String                                 
+  createdAt DateTime @default(now())     
+
+  records         Record[]
+  workoutRecords  WorkoutRecord[]
+  dietRecords     DietRecord[]
+  aiChats         AiChat[]
 }

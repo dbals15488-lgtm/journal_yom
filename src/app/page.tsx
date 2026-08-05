@@ -85,7 +85,7 @@ function WeatherWidget({
       <div className="weather-main">
         <div className="weather-icon-large">{currentInfo.icon}</div>
         <div className="weather-info">
-          <div className="weather-location">서울</div>
+          <div className="weather-location">{weather.location.name}</div>
           <div className="weather-temp">{weather.current.temperature}°</div>
           <div className="weather-label">{currentInfo.label}</div>
           <div className="weather-minmax">
@@ -528,27 +528,45 @@ export default function HomePage() {
   // 페이지 로드 시 모든 데이터 병렬로 불러오기
   useEffect(() => {
     const loadAll = async () => {
+      // 1. 브라우저 위치 요청 (실패해도 계속 진행)
+      const getPosition = (): Promise<{ lat: number; lon: number } | null> => {
+        return new Promise((resolve) => {
+          if (!navigator.geolocation) {
+            resolve(null);
+            return;
+          }
+          navigator.geolocation.getCurrentPosition(
+            (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
+            () => resolve(null),
+            { timeout: 5000 } // 5초 안에 응답 없으면 포기
+          );
+        });
+      };
+  
+      const position = await getPosition();
+  
+      // 2. 모든 데이터 병렬 로드
       const [weatherRes, summaryRes, recentRes, weeklyRes] = await Promise.all([
-        fetchWeather(),
+        fetchWeather(position?.lat, position?.lon),
         fetchTodaySummary(),
         fetchRecentRecords(),
         fetchWeeklyStats(),
       ]);
-
+  
       if (weatherRes.success && weatherRes.data) {
         setWeather(weatherRes.data);
       } else {
         setWeatherError(weatherRes.message ?? "날씨 로딩 실패");
       }
-
+  
       if (summaryRes.success && summaryRes.data) {
         setTodaySummary(summaryRes.data);
       }
-
+  
       if (recentRes.success && recentRes.data) {
         setRecentRecords(recentRes.data);
       }
-
+  
       if (weeklyRes.success && weeklyRes.data) {
         setWeeklyStats(weeklyRes.data);
       }

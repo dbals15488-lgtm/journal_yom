@@ -3,11 +3,10 @@
 import prisma from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
 import { GoogleGenAI } from "@google/genai";
+import { getCurrentUserId } from "../../lib/session";
 
 const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY! });
 
-// AI 영양소 자동 계산
-// ===============================
 export async function calculateNutrition(foodName: string, amount: string) {
   if (!foodName?.trim() || !amount?.trim()) {
     return { success: false, message: "음식명과 양을 입력해주세요." };
@@ -32,7 +31,6 @@ export async function calculateNutrition(foodName: string, amount: string) {
     });
 
     const text = response.text ?? "";
-
     const jsonMatch = text.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       return { success: false, message: "AI 응답을 이해할 수 없습니다. 다시 시도해주세요." };
@@ -54,9 +52,6 @@ export async function calculateNutrition(foodName: string, amount: string) {
   }
 }
 
-// 식단 저장
-// ===============================
-
 interface DietInput {
   foodName: string;
   amount: string;
@@ -76,7 +71,26 @@ function validateInput(data: DietInput[]): string | null {
   return null;
 }
 
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+function getDayRange(date: Date) {
+  const shifted = new Date(date.getTime() + KST_OFFSET_MS);
+  const startShifted = new Date(shifted);
+  startShifted.setUTCHours(0, 0, 0, 0);
+  const endShifted = new Date(shifted);
+  endShifted.setUTCHours(23, 59, 59, 999);
+  return {
+    gte: new Date(startShifted.getTime() - KST_OFFSET_MS),
+    lte: new Date(endShifted.getTime() - KST_OFFSET_MS),
+  };
+}
+
 export async function createDiet(data: DietInput[], date: Date) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   const error = validateInput(data);
   if (error) return { success: false, message: error };
 
@@ -91,7 +105,7 @@ export async function createDiet(data: DietInput[], date: Date) {
         calories: Number(item.calories) || 0,
         mealType: item.mealType,
         date,
-        userId: "user_id_here", // TODO: 로그인 연동 시 교체
+        userId,
       })),
     });
     revalidatePath("/diet");
@@ -102,74 +116,79 @@ export async function createDiet(data: DietInput[], date: Date) {
   }
 }
 
-// 식단 조회
-// ===============================
-export async function fetchDiets() {
+export async function updateDietsForDate(date: Date, data: DietInput[]) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
+  const error = validateInput(data);
+  if (error) return { success: false, message: error };
+
   try {
-    return await prisma.dietRecord.findMany({ orderBy: { date: "asc" } });
+    await prisma.$transaction([
+      prisma.dietRecord.deleteMany({
+        where: {
+          date: getDayRange(date),
+          userId,
+        },
+      }),
+      prisma.dietRecord.createMany({
+        data: data.map((item) => ({
+          foodName: item.foodName.trim(),
+          amount: item.amount.trim(),
+          protein: Number(item.protein) || 0,
+          fat: Number(item.fat) || 0,
+          carbs: Number(item.carbs) || 0,
+          calories: Number(item.calories) || 0,
+          mealType: item.mealType,
+          date,
+          userId,
+        })),
+      }),
+    ]);
+    revalidatePath("/diet");
+    return { success: true };
+  } catch (error) {
+    console.error("updateDietsForDate error:", error);
+    return { success: false, message: "수정 중 오류가 발생했습니다." };
+  }
+}
+
+export async function deleteDietsByDate(date: Date) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
+  try {
+    await prisma.dietRecord.deleteMany({
+      where: {
+        date: getDayRange(date),
+        userId,
+      },
+    });
+    revalidatePath("/diet");
+    return { success: true };
+  } catch (error) {
+    console.error("deleteDietsByDate error:", error);
+    return { success: false };
+  }
+}
+
+export async function fetchDiets() {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return [];
+  }
+
+  try {
+    return await prisma.dietRecord.findMany({
+      where: { userId },
+      orderBy: { date: "asc" },
+    });
   } catch (error) {
     console.error("fetchDiets error:", error);
     return [];
   }
 }
-
-// ===============================
-// 날짜 범위 헬퍼 (시간대 문제 방지)
-// ===============================
-function getDayRange(date: Date) {
-    const start = new Date(date);
-    start.setHours(0, 0, 0, 0);
-    const end = new Date(date);
-    end.setHours(23, 59, 59, 999);
-    return { gte: start, lte: end };
-  }
-  
-  // ===============================
-  // 특정 날짜 식단 통째로 교체 (수정)
-  // ===============================
-  export async function updateDietsForDate(date: Date, data: DietInput[]) {
-    const error = validateInput(data);
-    if (error) return { success: false, message: error };
-  
-    try {
-      await prisma.$transaction([
-        prisma.dietRecord.deleteMany({
-          where: { date: getDayRange(date) },
-        }),
-        prisma.dietRecord.createMany({
-          data: data.map((item) => ({
-            foodName: item.foodName.trim(),
-            amount: item.amount.trim(),
-            protein: Number(item.protein) || 0,
-            fat: Number(item.fat) || 0,
-            carbs: Number(item.carbs) || 0,
-            calories: Number(item.calories) || 0,
-            mealType: item.mealType,
-            date,
-            userId: "user_id_here",
-          })),
-        }),
-      ]);
-      revalidatePath("/diet");
-      return { success: true };
-    } catch (error) {
-      console.error("updateDietsForDate error:", error);
-      return { success: false, message: "수정 중 오류가 발생했습니다." };
-    }
-  }
-  
-  // ===============================
-  // 특정 날짜 식단 전체 삭제
-  // ===============================
-  export async function deleteDietsByDate(date: Date) {
-    try {
-      await prisma.dietRecord.deleteMany({
-        where: { date: getDayRange(date) },
-      });
-      revalidatePath("/diet");
-      return { success: true };
-    } catch (error) {
-      console.error("deleteDietsByDate error:", error);
-      return { success: false };
-    }
-  }

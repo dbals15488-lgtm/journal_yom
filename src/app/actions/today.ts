@@ -1,21 +1,27 @@
 "use server";
 
 import prisma from "../../lib/prisma";
+import { getCurrentUserId } from "../../lib/session";
 
 export interface TodaySummary {
-  hasDiary: boolean;      // 오늘 일지 작성 여부
-  hasWorkout: boolean;    // 오늘 운동 기록 여부
-  dietCalories: number;   // 오늘 총 칼로리 (0이면 미기록)
-  completed: number;      // 완료한 항목 수 (0~3)
+  hasDiary: boolean;
+  hasWorkout: boolean;
+  dietCalories: number;
+  completed: number;
 }
 
-// 오늘 하루 범위 헬퍼
-function getTodayRange() {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date();
-  end.setHours(23, 59, 59, 999);
-  return { gte: start, lte: end };
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
+function getTodayRangeKst() {
+  const nowKst = new Date(Date.now() + KST_OFFSET_MS);
+  const startShifted = new Date(nowKst);
+  startShifted.setUTCHours(0, 0, 0, 0);
+  const endShifted = new Date(nowKst);
+  endShifted.setUTCHours(23, 59, 59, 999);
+  return {
+    gte: new Date(startShifted.getTime() - KST_OFFSET_MS),
+    lte: new Date(endShifted.getTime() - KST_OFFSET_MS),
+  };
 }
 
 export async function fetchTodaySummary(): Promise<{
@@ -23,18 +29,23 @@ export async function fetchTodaySummary(): Promise<{
   data?: TodaySummary;
   message?: string;
 }> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   try {
-    const range = getTodayRange();
+    const range = getTodayRangeKst();
 
     const [diaryCount, workoutCount, dietRecords] = await Promise.all([
       prisma.record.count({
-        where: { createdAt: range },
+        where: { createdAt: range, userId },
       }),
       prisma.workoutRecord.count({
-        where: { date: range },
+        where: { date: range, userId },
       }),
       prisma.dietRecord.findMany({
-        where: { date: range },
+        where: { date: range, userId },
         select: { calories: true },
       }),
     ]);
@@ -43,7 +54,6 @@ export async function fetchTodaySummary(): Promise<{
     const hasWorkout = workoutCount > 0;
     const dietCalories = dietRecords.reduce((sum, r) => sum + (r.calories ?? 0), 0);
     const hasDiet = dietCalories > 0;
-
     const completed = [hasDiary, hasWorkout, hasDiet].filter(Boolean).length;
 
     return {

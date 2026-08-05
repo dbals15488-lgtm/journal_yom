@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "../../lib/prisma";
+import { getCurrentUserId } from "../../lib/session";
 
 export interface WeeklyDayData {
   date: string;
@@ -17,30 +18,24 @@ export interface WeeklyStats {
   days: WeeklyDayData[];
 }
 
-const KST_OFFSET_MS = 9 * 60 * 60 * 1000; // KST = UTC + 9시간
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
 
-// KST 기준 YYYY-MM-DD 문자열로 변환
 function toKstDateStr(d: Date): string {
   return new Date(d.getTime() + KST_OFFSET_MS).toISOString().split("T")[0];
 }
 
-// KST 기준 이번 주 월요일 00:00:00 (실제 UTC 시각 반환)
 function getWeekStart(): Date {
-  // 현재 시각을 KST로 이동 (UTC 메서드가 KST 값을 반환하도록)
   const nowKst = new Date(Date.now() + KST_OFFSET_MS);
-  const day = nowKst.getUTCDay(); // 0=일, 1=월, ..., 6=토 (실제로는 KST 요일)
+  const day = nowKst.getUTCDay();
   const diff = day === 0 ? 6 : day - 1;
 
-  // KST 월요일 00:00:00 (아직 UTC처럼 취급 중)
   const mondayShifted = new Date(nowKst);
   mondayShifted.setUTCDate(mondayShifted.getUTCDate() - diff);
   mondayShifted.setUTCHours(0, 0, 0, 0);
 
-  // 실제 UTC 시각으로 되돌림
   return new Date(mondayShifted.getTime() - KST_OFFSET_MS);
 }
 
-// 월요일 00:00 → 일요일 23:59:59.999
 function getWeekEnd(monday: Date): Date {
   return new Date(monday.getTime() + 7 * 24 * 60 * 60 * 1000 - 1);
 }
@@ -52,6 +47,11 @@ export async function fetchWeeklyStats(): Promise<{
   data?: WeeklyStats;
   message?: string;
 }> {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   try {
     const monday = getWeekStart();
     const sunday = getWeekEnd(monday);
@@ -59,20 +59,19 @@ export async function fetchWeeklyStats(): Promise<{
 
     const [diaries, workouts, diets] = await Promise.all([
       prisma.record.findMany({
-        where: { createdAt: range },
+        where: { createdAt: range, userId },
         select: { createdAt: true },
       }),
       prisma.workoutRecord.findMany({
-        where: { date: range },
+        where: { date: range, userId },
         select: { date: true },
       }),
       prisma.dietRecord.findMany({
-        where: { date: range },
+        where: { date: range, userId },
         select: { date: true, calories: true },
       }),
     ]);
 
-    // 요일별 집계 Map — 키는 KST 기준 YYYY-MM-DD
     const dayMap = new Map<string, WeeklyDayData>();
     for (let i = 0; i < 7; i++) {
       const dayDate = new Date(monday.getTime() + i * 24 * 60 * 60 * 1000);

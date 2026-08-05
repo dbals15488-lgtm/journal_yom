@@ -2,39 +2,50 @@
 
 import prisma from "../../lib/prisma";
 import { revalidatePath } from "next/cache";
+import { getCurrentUserId } from "../../lib/session";
 
-interface WorkoutInput{
+interface WorkoutInput {
   part: string;
   name: string;
   reps: number | string;
   sets: number | string;
-  restTime: string; 
+  restTime: string;
 }
 
 function validateInput(data: WorkoutInput[]): string | null {
-  for ( const item of data) {
-    if (!item.part?.trim() || !item.name?.trim() || !item.restTime?.trim()){
+  for (const item of data) {
+    if (!item.part?.trim() || !item.name?.trim() || !item.restTime?.trim()) {
       return "모든 항목을 입력해주세요.";
     }
-    if (!Number(item.reps) || Number(item.reps) <= 0 || !Number(item.sets) || Number(item.sets) <= 0){
-      return "횟수와 세트 수를 올바르게 입력해주세요."
+    if (!Number(item.reps) || Number(item.reps) <= 0 || !Number(item.sets) || Number(item.sets) <= 0) {
+      return "횟수와 세트 수를 올바르게 입력해주세요.";
     }
   }
   return null;
 }
 
+const KST_OFFSET_MS = 9 * 60 * 60 * 1000;
+
 function getDayRange(date: Date) {
-  const start = new Date(date);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(date);
-  end.setHours(23, 59, 59, 999);
-  return { gte: start, lte: end };
+  const shifted = new Date(date.getTime() + KST_OFFSET_MS);
+  const startShifted = new Date(shifted);
+  startShifted.setUTCHours(0, 0, 0, 0);
+  const endShifted = new Date(shifted);
+  endShifted.setUTCHours(23, 59, 59, 999);
+  return {
+    gte: new Date(startShifted.getTime() - KST_OFFSET_MS),
+    lte: new Date(endShifted.getTime() - KST_OFFSET_MS),
+  };
 }
 
 export async function createWorkout(data: WorkoutInput[], date: Date) {
-  const error = validateInput(data);
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
 
-  if(error) return { success: false, message: error};
+  const error = validateInput(data);
+  if (error) return { success: false, message: error };
 
   try {
     await prisma.workoutRecord.createMany({
@@ -45,7 +56,7 @@ export async function createWorkout(data: WorkoutInput[], date: Date) {
         sets: Number(item.sets),
         restTime: item.restTime.trim(),
         date,
-        userId: "user_id_here", 
+        userId,
       })),
     });
     revalidatePath("/workout");
@@ -56,16 +67,22 @@ export async function createWorkout(data: WorkoutInput[], date: Date) {
   }
 }
 
-
-
 export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   const error = validateInput(data);
   if (error) return { success: false, message: error };
 
   try {
     await prisma.$transaction([
       prisma.workoutRecord.deleteMany({
-        where: { date: getDayRange(date) },
+        where: {
+          date: getDayRange(date),
+          userId,
+        },
       }),
       prisma.workoutRecord.createMany({
         data: data.map((item) => ({
@@ -75,7 +92,7 @@ export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]) {
           sets: Number(item.sets),
           restTime: item.restTime.trim(),
           date,
-          userId: "user_id_here",
+          userId,
         })),
       }),
     ]);
@@ -88,9 +105,17 @@ export async function updateWorkoutsForDate(date: Date, data: WorkoutInput[]) {
 }
 
 export async function deleteWorkoutsByDate(date: Date) {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return { success: false, message: "로그인이 필요합니다." };
+  }
+
   try {
     await prisma.workoutRecord.deleteMany({
-      where: { date: getDayRange(date) },
+      where: {
+        date: getDayRange(date),
+        userId,
+      },
     });
     revalidatePath("/workout");
     return { success: true };
@@ -101,8 +126,16 @@ export async function deleteWorkoutsByDate(date: Date) {
 }
 
 export async function fetchWorkouts() {
+  const userId = await getCurrentUserId();
+  if (!userId) {
+    return [];
+  }
+
   try {
-    return await prisma.workoutRecord.findMany({ orderBy: { date: "asc" } });
+    return await prisma.workoutRecord.findMany({
+      where: { userId },
+      orderBy: { date: "asc" },
+    });
   } catch (error) {
     console.error("fetchWorkouts error:", error);
     return [];
