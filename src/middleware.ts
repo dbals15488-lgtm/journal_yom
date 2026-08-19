@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-const PROTECTED_PATHS = ["/", "/workout", "/diet", "/diary", "/detail", "/support"];
+const PROTECTED_PATHS = [ "/workout", "/diet", "/diary", "/detail", "/support"];
 const AUTH_PATHS = ["/login", "/register"];
 
 // next-auth v5의 세션 쿠키 이름들 (환경에 따라 이름 다름)

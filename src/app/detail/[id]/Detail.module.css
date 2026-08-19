@@ -1,375 +1,187 @@
 .container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-  }
-  
-  .backBtn {
-    background: none;
-    border: none;
-    color: #4c51bf;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  
-  .card {
-    background: white;
-    padding: 40px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-  }
-  
-  .badge {
-    display: inline-block;
-    padding: 4px 12px;
-    background: #ebf4ff;
-    color: #4c51bf;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: 700;
-    margin-bottom: 15px;
-  }
-  .day{
-    font-size: 26px;
-    margin-bottom: 20px;
-  }
-  .title {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #2d3748;
-    margin-bottom: 10px;
-  }
-  
-  .time {
-    color: #a0aec0;
-    font-size: 0.9rem;
-    margin-bottom: 30px;
-  }
-  
-  .content {
-    font-size: 1.2rem;
-    line-height: 1.8;
-    color: #4a5568;
-    min-height: 200px;
-    white-space: pre-wrap; /* 줄바꿈 유지 */
-  }
-  
-  .footer {
-    margin-top: 50px;
-    display: flex;
-    gap: 10px;
-    border-top: 1px solid #edf2f7;
-    padding-top: 30px;
-  }
-  
-  .editBtn, .deleteBtn, .back2Btn {
-    padding: 12px 24px;
-    border-radius: 10px;
-    border: none;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  
- 
-  .deleteBtn {
-    background: #fff;
-    color: #e53e3e;
-    border: 1px solid #fed7d7;
-    transition: all 0.3s;
-  }
-
-  .back2Btn,.editBtn{
-    background: #fff;
-    border: 1px solid #4c51bf;
-    color: #4c51bf;
-    transition: all 0.3s;
-  }
-
-  .back2Btn:hover,.editBtn:hover{
-    background: #4c51bf;
-    color: white;
-  }
-
-  .deleteBtn:hover{
-    background: #e53e3e;
-    color: #fff;
-  }
-  .container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 0 20px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px;
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 15px;
+  box-shadow: var(--shadow-md);
+  transition: background 0.2s ease, border-color 0.2s ease;
 }
 
-.nav {
-    margin-bottom: 20px;
-}
-
-.backBtn {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    padding: 8px 16px;
-    border-radius: 8px;
-    color: #4a5568;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.backBtn:hover {
-    background: #f8fafc;
-    border-color: #cbd5e1;
-}
-
-.card {
-    background: #ffffff;
-    border-radius: 16px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-    padding: 40px;
-    border: 1px solid #f1f5f9;
-}
-
-
-.titleInput {
-    width: 100%;
-    padding: 12px 16px;
-    font-size: 20px;
-    font-weight: 700;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    outline: none;
-    color: #1a202c;
-    box-sizing: border-box;
-}
-
-.titleInput:focus {
-    border-color: #6366f1;
-}
-
-.contentArea {
-    width: 100%;
-    height: 300px;
-    padding: 16px;
-    font-size: 16px;
-    line-height: 1.6;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    outline: none;
-    resize: none;
-    color: #4a5568;
-    box-sizing: border-box;
-}
-
-.contentArea:focus {
-    border-color: #6366f1;
-}
-
-.editFooter {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 10px;
-}
-
-.fileUpload {
-    font-size: 14px;
-    color: #718096;
-}
-
-.btnGroup {
-  margin-top: 20px;
-    display: flex;
-    gap: 10px;
-}
-
-.saveBtn {
-    background: #6366f1;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.cancelBtn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-
-.badge {
-    display: inline-block;
-    background: #f1f5f9;
-    color: #64748b;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 600;
-    margin-bottom: 12px;
+.date {
+  text-align: right;
+  color: var(--text-tertiary);
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 .title {
-    font-size: 28px;
-    color: #1a202c;
-    margin: 12px 0;
-    font-weight: 700;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 15px;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 10px 0 30px 0;
+  border-bottom: 2px solid var(--accent-indigo);
+  padding-bottom: 15px;
 }
 
-.time {
-    font-size: 13px;
-    color: #a0aec0;
-    margin: 4px 0;
+.contentWrapper {
+  color: var(--text-secondary);
+  line-height: 1.8;
 }
-.time2 {
-    font-size: 13px;
-    color: #a0aec0;
-    margin: 4px 0;
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
+
+.contentWrapper p {
+  color: var(--text-primary);
 }
-.top_Num_box{
+
+.attachments {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.attachments h3 {
+  color: var(--text-primary);
+  margin-bottom: 15px;
+}
+
+.fileList {
+  list-style: none;
+  padding: 0;
+}
+
+.fileItem {
+  padding: 10px 15px;
+  background-color: var(--bg-primary);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: background 0.15s;
+}
+
+.fileItem:hover {
+  background-color: var(--bg-hover);
+}
+
+.fileItem a {
+  color: var(--accent-indigo);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.fileItem a:hover {
+  text-decoration: underline;
+}
+
+.error {
+  text-align: center;
+  padding: 50px;
+  color: var(--accent-red);
+  background: var(--bg-card);
+  border: 1px solid var(--accent-red);
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 40px auto;
+}
+
+.btn-box {
   display: flex;
   justify-content: space-between;
-}
-.content {
-    font-size: 16px;
-    line-height: 1.8;
-    color: #4a5568;
-    margin: 30px 0;
-    min-height: 150px;
-    white-space: pre-wrap;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: 30px;
 }
 
-.footer {
-    display: flex;
-    gap: 10px;
-    border-top: 1px solid #edf2f7;
-    padding-top: 20px;
+.editBtn,
+.deleteBtn,
+.backBtn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: opacity 0.15s, transform 0.15s;
+  font-family: inherit;
 }
 
 .editBtn {
-    background: #6366f1;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
+  background: var(--accent-indigo);
+  color: var(--text-inverse);
 }
-
 
 .deleteBtn {
-    background: #ef4444;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
+  background: var(--bg-card);
+  color: var(--accent-red);
+  border: 1px solid var(--accent-red);
 }
 
-.back2Btn {
-    background: #718096;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
+.deleteBtn:hover {
+  background: var(--accent-red);
+  color: var(--text-inverse);
 }
 
-.downloadSection {
-  margin-top: 30px;
-  padding: 15px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  border: 1px solid #e9ecef;
+.backBtn {
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
 }
 
-.downloadLink {
-  color: #4f46e5;
-  text-decoration: underline;
-  font-weight: bold;
-  margin-left: 8px;
+.backBtn:hover {
+  background: var(--bg-subtle);
 }
 
-.fileSection {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px dashed #ced4da;
-  border-radius: 6px;
+.editBtn:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
-.fileStatus {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  font-size: 14px;
+/* ============================
+ 반응형
+============================ */
+
+/* 태블릿 */
+@media (max-width: 1024px) {
+  .container {
+      max-width: 90%;
+      margin: 30px auto;
+      padding: 32px;
+  }
+  .title {
+      font-size: 28px;
+  }
 }
 
-.fileDeleteBtn {
-  background-color: #e63946;
-  color: white;
-  border: none;
-  padding: 4px 8px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 12px;
-}
-.ql-htmlEdit {
-  width: auto !important;
-  font-size: 11px !important;
-  font-weight: bold !important;
-  color: #333 !important;
-  border: none !important;
-  border-radius: 3px;
-  padding: 0 4px !important;
-  background-color: #fff !important;
-}
-
-.ql-htmlEdit::after {
-  content: 'HTML' !important;
-  
-}
-
-.html-mode .ql-htmlEdit {
-  color: #1e88e5 !important;
-  border: 1px solid #1e88e5 !important;
-  background-color: #e3f2fd !important;
-}
-
-:global(.ql-htmlEdit) {
-  width: auto !important;
-  font-size: 11px !important;
-  font-weight: bold !important;
-  color: #333 !important;
-  border: none !important;
-  border-radius: 3px;
-  padding: 0 4px !important;
-  background-color: #fff !important;
-  display: inline-block !important; 
-}
-
-:global(.ql-htmlEdit::after) {
-  content: 'HTML' !important;
-  display: inline-block !important;
-}
-
-:global(.html-mode .ql-htmlEdit) {
-  color: #1e88e5 !important;
-  border: 1px solid #1e88e5 !important;
-  background-color: #e3f2fd !important;
+/* 모바일 */
+@media (max-width: 640px) {
+  .container {
+      max-width: 100%;
+      margin: 16px;
+      padding: 20px;
+      border-radius: 12px;
+  }
+  .title {
+      font-size: 22px;
+      margin: 8px 0 20px 0;
+      padding-bottom: 12px;
+  }
+  .date {
+      font-size: 13px;
+  }
+  .contentWrapper {
+      font-size: 14px;
+  }
+  .attachments {
+      margin-top: 30px;
+  }
+  .btn-box {
+      flex-direction: column;
+      gap: 8px;
+  }
+  .editBtn,
+  .deleteBtn,
+  .backBtn {
+      width: 100%;
+  }
 }

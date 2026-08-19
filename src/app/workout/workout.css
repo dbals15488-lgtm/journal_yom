@@ -1,15 +1,17 @@
-/* ================================
+/* ============================
    레이아웃
-================================ */
+============================ */
 .workout-container {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+  background: var(--bg-primary);
+  min-height: calc(100vh - 60px);
 }
 
-/* ================================
+/* ============================
    캘린더 네비게이션
-================================ */
+============================ */
 .calendar-nav {
   display: flex;
   align-items: center;
@@ -21,9 +23,9 @@
   padding: 8px 32px 8px 12px;
   font-size: 16px;
   font-weight: 600;
-  color: #4a5568;
-  background-color: #ffffff;
-  border: 1px solid #e2e8f0;
+  color: var(--text-secondary);
+  background-color: var(--bg-card);
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   cursor: pointer;
   outline: none;
@@ -39,21 +41,38 @@
 }
 
 .nav-select:hover {
-  background-color: #eef2ff;
+  background-color: var(--accent-indigo-light);
   border-radius: 6px;
 }
 
-/* ================================
+/* 다크모드에서는 화살표 아이콘 밝게 */
+[data-theme="dark"] .nav-select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23cbd5e1'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+}
+
+/* ============================
    캘린더 날짜 칸
-================================ */
+============================ */
 .rdp-root {
   margin-bottom: 30px;
+  --rdp-accent-color: var(--accent-indigo);
+  --rdp-background-color: var(--accent-indigo-light);
 }
 
 .rdp-day {
   width: 100px !important;
   height: 100px !important;
   vertical-align: top;
+  color: var(--text-primary);
+}
+
+/* 다크모드 캘린더 색상 조정 */
+[data-theme="dark"] .rdp-root {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rdp-day_button:hover {
+  background: var(--bg-hover);
 }
 
 .day-cell {
@@ -70,6 +89,7 @@
   margin-top: 5px;
   position: relative;
   z-index: 1;
+  color: var(--text-primary);
 }
 
 .workout-preview {
@@ -85,7 +105,7 @@
 .workout-item {
   font-size: 10px;
   color: #fff;
-  background: #8385ff;
+  background: var(--accent-indigo);
   padding: 2px;
   border-radius: 3px;
   white-space: nowrap;
@@ -93,9 +113,9 @@
   text-overflow: ellipsis;
 }
 
-/* ================================
+/* ============================
    작성 모달 (새 일지 입력 폼)
-================================ */
+============================ */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -106,16 +126,20 @@
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  background: var(--bg-overlay);
 }
 
 .modal-content {
-  background: white;
+  background: var(--bg-card);
   padding: 30px;
   width: 1100px;
+  max-width: calc(100vw - 40px);
   height: auto;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-lg);
   z-index: 10000;
+  max-height: 85vh;
+  overflow-y: auto;
 }
 
 .workout-row {
@@ -124,27 +148,30 @@
   margin-bottom: 10px;
   align-items: center;
   padding: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .workout-row input {
   padding: 8px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-primary);
   border-radius: 5px;
   flex: 1;
+  background: var(--bg-card);
+  color: var(--text-primary);
 }
 
-/* ================================
+/* ============================
    상세 모달
-================================ */
+============================ */
 .modal-content2 {
   z-index: 10000;
-  background: #fff;
+  background: var(--bg-card);
   border-radius: 16px;
   width: 620px;
+  max-width: calc(100vw - 40px);
   max-height: 80vh;
   padding: 28px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-xl);
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -156,7 +183,7 @@
   justify-content: space-between;
   align-items: flex-start;
   padding-bottom: 16px;
-  border-bottom: 2px solid #f0f0f0;
+  border-bottom: 2px solid var(--border-subtle);
 }
 
 .detail-date-block {
@@ -168,19 +195,19 @@
 .detail-date-main {
   font-size: 22px;
   font-weight: 800;
-  color: #1a202c;
+  color: var(--text-primary);
   letter-spacing: -0.5px;
 }
 
 .detail-date-sub {
   font-size: 13px;
-  color: #94a3b8;
+  color: var(--text-tertiary);
   font-weight: 500;
 }
 
 .detail-count-badge {
-  background: #eef2ff;
-  color: #4338ca;
+  background: var(--accent-indigo-light);
+  color: var(--accent-indigo);
   font-size: 12px;
   font-weight: 700;
   padding: 4px 10px;
@@ -202,22 +229,22 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: #f8faff;
-  border: 1px solid #e8edf5;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 14px 16px;
   transition: box-shadow 0.15s;
 }
 
 .detail-card:hover {
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .detail-card-index {
   width: 24px;
   height: 24px;
-  background: #e0e7ff;
-  color: #4338ca;
+  background: var(--accent-indigo-light);
+  color: var(--accent-indigo);
   border-radius: 50%;
   font-size: 12px;
   font-weight: 700;
@@ -242,8 +269,8 @@
 }
 
 .detail-part-tag {
-  background: #6366f1;
-  color: #fff;
+  background: var(--accent-indigo);
+  color: var(--text-inverse);
   font-size: 11px;
   font-weight: 700;
   padding: 2px 8px;
@@ -254,7 +281,7 @@
 .detail-exercise-name {
   font-size: 15px;
   font-weight: 700;
-  color: #1e293b;
+  color: var(--text-primary);
 }
 
 .detail-card-stats {
@@ -264,9 +291,9 @@
 }
 
 .stat-pill {
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  color: #64748b;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
   font-size: 12px;
   font-weight: 500;
   padding: 3px 10px;
@@ -278,14 +305,15 @@
   justify-content: flex-end;
   gap: 8px;
   padding-top: 12px;
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--border-subtle);
 }
 
-/* ================================
+/* ============================
    수정 모달
-================================ */
+============================ */
 .edit-modal {
   width: 620px;
+  max-width: calc(100vw - 40px);
   max-height: 82vh;
   display: flex;
   flex-direction: column;
@@ -295,8 +323,8 @@
 }
 
 .edit-card {
-  background: #f8faff;
-  border: 1px solid #e8edf5;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 14px 16px;
   display: flex;
@@ -306,7 +334,7 @@
 }
 
 .edit-card:hover {
-  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 .edit-card-header {
@@ -319,13 +347,13 @@
   flex: 1;
   font-size: 14px;
   font-weight: 700;
-  color: #334155;
+  color: var(--text-primary);
 }
 
 .edit-delete-btn {
   background: none;
   border: none;
-  color: #cbd5e1;
+  color: var(--text-tertiary);
   font-size: 16px;
   cursor: pointer;
   padding: 2px 4px;
@@ -334,8 +362,8 @@
 }
 
 .edit-delete-btn:hover {
-  color: #e53e3e;
-  background: #fff0f0;
+  color: var(--accent-red);
+  background: rgba(229, 62, 62, 0.1);
 }
 
 .edit-fields {
@@ -360,17 +388,17 @@
 .edit-label {
   font-size: 11px;
   font-weight: 600;
-  color: #94a3b8;
+  color: var(--text-tertiary);
   letter-spacing: 0.4px;
 }
 
 .edit-input {
   padding: 8px 10px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid var(--border-primary);
   border-radius: 8px;
   font-size: 14px;
-  color: #1e293b;
-  background: #fff;
+  color: var(--text-primary);
+  background: var(--bg-card);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
   width: 100%;
@@ -378,79 +406,160 @@
 }
 
 .edit-input:focus {
-  border-color: #6366f1;
+  border-color: var(--accent-indigo);
   box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-/* ================================
+/* ============================
    공통 버튼
-================================ */
+============================ */
 .btn-add {
-  background: #fff;
-  color: #6366f1;
-  border: 1px solid #6366f1;
+  background: var(--bg-card);
+  color: var(--accent-indigo);
+  border: 1px solid var(--accent-indigo);
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
-  margin-right: 5px;
+  margin-right: 10px;
+  transition: background 0.15s, color 0.15s;
 }
 
 .btn-add:hover {
-  background: #6366f1;
-  color: white;
+  background: var(--accent-indigo);
+  color: var(--text-inverse);
 }
 
 .btn-remove {
-  background: #fff;
-  color: #e53e3e;
-  border: 1px solid #e53e3e;
+  background: var(--bg-card);
+  color: var(--accent-red);
+  border: 1px solid var(--accent-red);
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  transition: background 0.15s, color 0.15s;
 }
 
 .btn-remove:hover {
-  background: #e53e3e;
-  color: #fff;
+  background: var(--accent-red);
+  color: var(--text-inverse);
 }
 
 .btn-save {
   padding: 10px 15px;
-  background: #fff;
-  color: #223498;
-  border: 1px solid #223498;
+  background: var(--bg-card);
+  color: var(--accent-indigo);
+  border: 1px solid var(--accent-indigo);
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
-  margin-right: 5px;
+  transition: background 0.15s, color 0.15s;
 }
 
 .btn-save:hover {
-  background: #223498;
-  color: #fff;
+  background: var(--accent-indigo);
+  color: var(--text-inverse);
 }
 
 .btn-close {
-  background: #fff;
-  color: #555;
-  border: 1px solid #ccc;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: bold;
+  transition: background 0.15s;
 }
 
 .btn-close:hover {
-  background: #f0f0f0;
+  background: var(--bg-subtle);
 }
 
-/* ================================
+/* ============================
    폼 에러 메시지
-================================ */
+============================ */
 .form-error {
-  color: #e53e3e;
+  color: var(--accent-red);
   font-size: 13px;
   margin-top: 8px;
   font-weight: 500;
+}
+
+/* ============================
+   반응형
+============================ */
+
+/* 태블릿 */
+@media (max-width: 1024px) {
+  .workout-container {
+    padding: 1.5rem;
+  }
+  .rdp-day {
+    width: 80px !important;
+    height: 80px !important;
+  }
+  .modal-content {
+    width: 900px;
+  }
+  .workout-item {
+    font-size: 9px;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .workout-container {
+    padding: 1rem;
+  }
+  .rdp-day {
+    width: auto !important;
+    height: 60px !important;
+    min-width: 0;
+  }
+  .day-number {
+    font-size: 12px;
+    margin-top: 2px;
+  }
+  .workout-preview {
+    width: 95%;
+    top: 2px;
+  }
+  .workout-item {
+    font-size: 8px;
+    padding: 1px 2px;
+  }
+  .modal-content,
+  .modal-content2,
+  .edit-modal {
+    padding: 20px;
+    width: calc(100vw - 24px);
+  }
+  .workout-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .workout-row input {
+    width: 100%;
+  }
+  .edit-fields {
+    flex-direction: column;
+  }
+  .edit-field,
+  .edit-field-sm {
+    flex: 1;
+    min-width: 0;
+  }
+  .detail-footer {
+    flex-wrap: wrap;
+  }
+  .detail-header {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .detail-date-main {
+    font-size: 18px;
+  }
 }

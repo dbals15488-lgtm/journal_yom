@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { format } from "date-fns";
 import { ko } from "date-fns/locale";
 import Link from "next/link";
@@ -10,10 +10,29 @@ import "./dashboard.css";
 import { fetchTodaySummary, type TodaySummary } from "./actions/today";
 import { fetchRecentRecords, type RecentRecord } from "./actions/recent";
 import { fetchWeather, type WeatherData } from "./actions/weather";
-import { getWeatherInfo } from "./weather-utils";
 import { fetchWeeklyStats, type WeeklyStats } from "./actions/weeklyStats";
-import { fetchChatHistory, sendChatMessage, clearChatHistory, type ChatMessage,} from "./actions/aiChat";
-import { useRef } from "react";
+import { getWeatherInfo } from "./weather-utils";
+import {
+  fetchChatHistory,
+  sendChatMessage,
+  clearChatHistory,
+  type ChatMessage,
+} from "./actions/aiChat";
+
+// ===============================
+// 로그인 필요 안내 (공용)
+// ===============================
+function LoginRequiredNotice({ message }: { message: string }) {
+  return (
+    <div className="login-required">
+      <div className="login-required-icon">🔒</div>
+      <p className="login-required-text">{message}</p>
+      <Link href="/login" className="login-required-btn">
+        로그인하기
+      </Link>
+    </div>
+  );
+}
 
 // ===============================
 // 시계 위젯
@@ -168,7 +187,25 @@ function getRelativeTime(date: Date) {
   return format(target, "M월 d일", { locale: ko });
 }
 
-function RecentRecordsWidget({ records }: { records: RecentRecord[] | null }) {
+function RecentRecordsWidget({
+  records,
+  isLoggedIn,
+}: {
+  records: RecentRecord[] | null;
+  isLoggedIn: boolean;
+}) {
+  // 로그인 안 됐으면 로그인 유도
+  if (!isLoggedIn) {
+    return (
+      <div className="card recent-card">
+        <div className="recent-header">
+          <h3 className="recent-title">최근 기록</h3>
+        </div>
+        <LoginRequiredNotice message="최근 기록을 보려면 로그인이 필요해요" />
+      </div>
+    );
+  }
+
   if (records === null) {
     return (
       <div className="card recent-card">
@@ -232,10 +269,29 @@ function RecentRecordsWidget({ records }: { records: RecentRecord[] | null }) {
     </div>
   );
 }
+
 // ===============================
 // 이번 주 통계 위젯
 // ===============================
-function WeeklyStatsWidget({ stats }: { stats: WeeklyStats | null }) {
+function WeeklyStatsWidget({
+  stats,
+  isLoggedIn,
+}: {
+  stats: WeeklyStats | null;
+  isLoggedIn: boolean;
+}) {
+  // 로그인 안 됐으면 로그인 유도
+  if (!isLoggedIn) {
+    return (
+      <div className="card weekly-card">
+        <div className="weekly-header">
+          <h3 className="weekly-title">이번 주 통계</h3>
+        </div>
+        <LoginRequiredNotice message="통계를 보려면 로그인이 필요해요" />
+      </div>
+    );
+  }
+
   if (stats === null) {
     return (
       <div className="card weekly-card">
@@ -317,6 +373,7 @@ function WeeklyStatsWidget({ stats }: { stats: WeeklyStats | null }) {
     </div>
   );
 }
+
 // ===============================
 // AI 어시스턴트 위젯
 // ===============================
@@ -326,14 +383,16 @@ const QUICK_PROMPTS = [
   "어떤 운동 추천해?",
 ];
 
-function AiAssistantWidget() {
+function AiAssistantWidget({ isLoggedIn }: { isLoggedIn: boolean }) {
   const [messages, setMessages] = useState<ChatMessage[] | null>(null);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // 초기 로드
+  // 초기 로드 (로그인 시에만)
   useEffect(() => {
+    if (!isLoggedIn) return;
+
     const load = async () => {
       const result = await fetchChatHistory();
       if (result.success && result.data) {
@@ -343,7 +402,7 @@ function AiAssistantWidget() {
       }
     };
     load();
-  }, []);
+  }, [isLoggedIn]);
 
   // 메시지 목록 아래로 자동 스크롤
   useEffect(() => {
@@ -352,6 +411,20 @@ function AiAssistantWidget() {
     }
   }, [messages]);
 
+  // 로그인 안 됐으면 로그인 유도
+  if (!isLoggedIn) {
+    return (
+      <div className="card ai-card">
+        <div className="ai-header">
+          <h3 className="ai-title">🤖 AI 어시스턴트</h3>
+        </div>
+        <div className="ai-messages">
+          <LoginRequiredNotice message="AI 어시스턴트를 사용하려면 로그인이 필요해요" />
+        </div>
+      </div>
+    );
+  }
+
   const handleSend = async (text?: string) => {
     const message = (text ?? input).trim();
     if (!message || isSending) return;
@@ -359,7 +432,6 @@ function AiAssistantWidget() {
     setInput("");
     setIsSending(true);
 
-    // 낙관적 업데이트: 사용자 메시지 즉시 표시
     const tempUserMsg: ChatMessage = {
       id: Date.now(),
       role: "user",
@@ -372,14 +444,12 @@ function AiAssistantWidget() {
     setIsSending(false);
 
     if (result.success && result.data) {
-      // 임시 메시지를 실제 저장된 메시지로 교체 + AI 답변 추가
       setMessages((prev) => {
         const withoutTemp = (prev ?? []).filter((m) => m.id !== tempUserMsg.id);
         return [...withoutTemp, result.data!.userMsg, result.data!.aiMsg];
       });
     } else {
       alert(result.message ?? "전송 실패");
-      // 실패 시 임시 메시지 제거
       setMessages((prev) => (prev ?? []).filter((m) => m.id !== tempUserMsg.id));
     }
   };
@@ -472,6 +542,7 @@ function AiAssistantWidget() {
     </div>
   );
 }
+
 // ===============================
 // 빠른 액션 위젯
 // ===============================
@@ -479,7 +550,7 @@ const QUICK_ACTIONS = [
   { icon: "✏️", label: "일지 쓰기", href: "/diary", color: "#8b5cf6" },
   { icon: "💪", label: "운동 기록", href: "/workout", color: "#f97316" },
   { icon: "🍽", label: "식단 등록", href: "/diet", color: "#10b981" },
-  { icon: "🎧", label: "고객 문의", href: "/support", color: "#3b82f6" },
+  { icon: "🎧", label: "고객 센터", href: "/support", color: "#3b82f6" },
 ];
 
 function QuickActionsWidget() {
@@ -513,7 +584,8 @@ function QuickActionsWidget() {
 // 메인 페이지
 // ===============================
 export default function HomePage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const isLoggedIn = !!session?.user;
   const userName = session?.user?.name ?? "게스트";
 
   const today = new Date();
@@ -525,10 +597,9 @@ export default function HomePage() {
   const [recentRecords, setRecentRecords] = useState<RecentRecord[] | null>(null);
   const [weeklyStats, setWeeklyStats] = useState<WeeklyStats | null>(null);
 
-  // 페이지 로드 시 모든 데이터 병렬로 불러오기
   useEffect(() => {
     const loadAll = async () => {
-      // 1. 브라우저 위치 요청 (실패해도 계속 진행)
+      // 위치 정보
       const getPosition = (): Promise<{ lat: number; lon: number } | null> => {
         return new Promise((resolve) => {
           if (!navigator.geolocation) {
@@ -538,41 +609,46 @@ export default function HomePage() {
           navigator.geolocation.getCurrentPosition(
             (pos) => resolve({ lat: pos.coords.latitude, lon: pos.coords.longitude }),
             () => resolve(null),
-            { timeout: 5000 } // 5초 안에 응답 없으면 포기
+            { timeout: 5000 }
           );
         });
       };
-  
+
       const position = await getPosition();
-  
-      // 2. 모든 데이터 병렬 로드
-      const [weatherRes, summaryRes, recentRes, weeklyRes] = await Promise.all([
-        fetchWeather(position?.lat, position?.lon),
-        fetchTodaySummary(),
-        fetchRecentRecords(),
-        fetchWeeklyStats(),
-      ]);
-  
+
+      // 날씨는 항상 로드 (로그인 불필요)
+      const weatherRes = await fetchWeather(position?.lat, position?.lon);
       if (weatherRes.success && weatherRes.data) {
         setWeather(weatherRes.data);
       } else {
         setWeatherError(weatherRes.message ?? "날씨 로딩 실패");
       }
-  
-      if (summaryRes.success && summaryRes.data) {
-        setTodaySummary(summaryRes.data);
-      }
-  
-      if (recentRes.success && recentRes.data) {
-        setRecentRecords(recentRes.data);
-      }
-  
-      if (weeklyRes.success && weeklyRes.data) {
-        setWeeklyStats(weeklyRes.data);
+
+      // 로그인 상태에서만 개인 데이터 로드
+      if (isLoggedIn) {
+        const [summaryRes, recentRes, weeklyRes] = await Promise.all([
+          fetchTodaySummary(),
+          fetchRecentRecords(),
+          fetchWeeklyStats(),
+        ]);
+
+        if (summaryRes.success && summaryRes.data) {
+          setTodaySummary(summaryRes.data);
+        }
+        if (recentRes.success && recentRes.data) {
+          setRecentRecords(recentRes.data);
+        }
+        if (weeklyRes.success && weeklyRes.data) {
+          setWeeklyStats(weeklyRes.data);
+        }
       }
     };
-    loadAll();
-  }, []);
+
+    // 세션 상태 결정된 후 로드
+    if (status !== "loading") {
+      loadAll();
+    }
+  }, [isLoggedIn, status]);
 
   return (
     <div className="dashboard">
@@ -591,62 +667,71 @@ export default function HomePage() {
               <div className="profile-avatar">{userName.charAt(0)}</div>
               <div className="profile-info">
                 <h2 className="profile-name">{userName}</h2>
-                <p className="profile-role">개인 대시보드</p>
+                <p className="profile-role">
+                  {isLoggedIn ? "개인 대시보드" : "로그인이 필요합니다"}
+                </p>
               </div>
             </div>
 
-            <div className="today-summary">
-              <Link
-                href="/diary"
-                className={`summary-item ${todaySummary?.hasDiary ? "summary-done" : ""}`}
-              >
-                <div className="summary-icon">📝</div>
-                <div className="summary-label">일지</div>
-                <div className="summary-value">
-                  {todaySummary === null ? "-" : todaySummary.hasDiary ? "✓" : "-"}
-                </div>
-              </Link>
+            {isLoggedIn ? (
+              <div className="today-summary">
+                <Link
+                  href="/diary"
+                  className={`summary-item ${todaySummary?.hasDiary ? "summary-done" : ""}`}
+                >
+                  <div className="summary-icon">📝</div>
+                  <div className="summary-label">일지</div>
+                  <div className="summary-value">
+                    {todaySummary === null ? "-" : todaySummary.hasDiary ? "✓" : "-"}
+                  </div>
+                </Link>
 
-              <Link
-                href="/workout"
-                className={`summary-item ${todaySummary?.hasWorkout ? "summary-done" : ""}`}
-              >
-                <div className="summary-icon">💪</div>
-                <div className="summary-label">운동</div>
-                <div className="summary-value">
-                  {todaySummary === null ? "-" : todaySummary.hasWorkout ? "✓" : "-"}
-                </div>
-              </Link>
+                <Link
+                  href="/workout"
+                  className={`summary-item ${todaySummary?.hasWorkout ? "summary-done" : ""}`}
+                >
+                  <div className="summary-icon">💪</div>
+                  <div className="summary-label">운동</div>
+                  <div className="summary-value">
+                    {todaySummary === null ? "-" : todaySummary.hasWorkout ? "✓" : "-"}
+                  </div>
+                </Link>
 
-              <Link
-                href="/diet"
-                className={`summary-item ${
-                  todaySummary && todaySummary.dietCalories > 0 ? "summary-done" : ""
-                }`}
-              >
-                <div className="summary-icon">🍽</div>
-                <div className="summary-label">식단</div>
-                <div className="summary-value summary-value-sm">
-                  {todaySummary === null
-                    ? "-"
-                    : todaySummary.dietCalories > 0
-                    ? `${todaySummary.dietCalories.toLocaleString()}kcal`
-                    : "-"}
-                </div>
-              </Link>
+                <Link
+                  href="/diet"
+                  className={`summary-item ${
+                    todaySummary && todaySummary.dietCalories > 0 ? "summary-done" : ""
+                  }`}
+                >
+                  <div className="summary-icon">🍽</div>
+                  <div className="summary-label">식단</div>
+                  <div className="summary-value summary-value-sm">
+                    {todaySummary === null
+                      ? "-"
+                      : todaySummary.dietCalories > 0
+                      ? `${todaySummary.dietCalories.toLocaleString()}kcal`
+                      : "-"}
+                  </div>
+                </Link>
 
-              <div
-                className={`summary-item ${
-                  todaySummary && todaySummary.completed === 3 ? "summary-done" : ""
-                }`}
-              >
-                <div className="summary-icon">🎯</div>
-                <div className="summary-label">달성률</div>
-                <div className="summary-value">
-                  {todaySummary === null ? "-" : `${todaySummary.completed}/3`}
+                <div
+                  className={`summary-item ${
+                    todaySummary && todaySummary.completed === 3 ? "summary-done" : ""
+                  }`}
+                >
+                  <div className="summary-icon">🎯</div>
+                  <div className="summary-label">달성률</div>
+                  <div className="summary-value">
+                    {todaySummary === null ? "-" : `${todaySummary.completed}/3`}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              <Link href="/login" className="login-cta">
+                <span className="login-cta-icon">🔐</span>
+                <span className="login-cta-text">로그인하고 시작하기</span>
+              </Link>
+            )}
           </div>
 
           <QuickActionsWidget />
@@ -655,14 +740,14 @@ export default function HomePage() {
         {/* 가운데 열 */}
         <div className="dashboard-col-center">
           <WeatherWidget weather={weather} error={weatherError} />
-          <AiAssistantWidget />
+          <AiAssistantWidget isLoggedIn={isLoggedIn} />
         </div>
 
         {/* 오른쪽 열 */}
         <div className="dashboard-col-right">
           <ClockWidget />
-          <WeeklyStatsWidget stats={weeklyStats} />
-          <RecentRecordsWidget records={recentRecords} />
+          <WeeklyStatsWidget stats={weeklyStats} isLoggedIn={isLoggedIn} />
+          <RecentRecordsWidget records={recentRecords} isLoggedIn={isLoggedIn} />
         </div>
       </div>
     </div>

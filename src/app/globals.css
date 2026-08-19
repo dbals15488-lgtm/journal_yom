@@ -1,8 +1,167 @@
+/* ============================
+   CSS 변수 시스템
+   - 색상: 라이트/다크 모드
+   - 반응형 breakpoint (참고용)
+============================ */
 
+/* 라이트 모드 (기본) */
+:root {
+  /* 배경 */
+  --bg-primary: #f8fafc;       
+  --bg-card: #ffffff;           
+  --bg-hover: #eef2ff;        
+  --bg-subtle: #f1f5f9;        
+  --bg-elevated: #ffffff;      
+  --bg-overlay: rgba(0, 0, 0, 0.5); 
 
-*{
-  margin: 0;
+  /* 텍스트 */
+  --text-primary: #1a202c;     
+  --text-secondary: #64748b;    
+  --text-tertiary: #94a3b8;    
+  --text-inverse: #ffffff;      
+
+  /* 테두리/구분선 */
+  --border-primary: #e2e8f0;   
+  --border-subtle: #f0f0f5;    
+
+  /* 강조색 (라이트/다크 공용) */
+  --accent-indigo: #6366f1;
+  --accent-indigo-light: #eef2ff;
+  --accent-sky: #38bdf8;
+  --accent-violet: #8b5cf6;
+  --accent-orange: #f97316;
+  --accent-emerald: #10b981;
+  --accent-red: #e53e3e;
+  --accent-amber: #f59e0b;
+  --accent-blue: #3b82f6;
+
+  /* 그림자 */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(99, 102, 241, 0.1);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.15);
+}
+
+/* 다크 모드 */
+[data-theme="dark"] {
+  /* 배경 */
+  --bg-primary: #0f172a;
+  --bg-card: #1e293b;
+  --bg-hover: #334155;
+  --bg-subtle: #334155;
+  --bg-elevated: #1e293b;
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  /* 텍스트 */
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --text-inverse: #ffffff;
+
+  /* 테두리 */
+  --border-primary: #334155;
+  --border-subtle: #1e293b;
+
+  /* 강조색은 라이트/다크 공용이라 유지 */
+  /* 하지만 다크모드에선 옅은 배경색만 살짝 조정 */
+  --accent-indigo-light: rgba(99, 102, 241, 0.15);
+
+  /* 그림자 (다크모드에선 그림자 대신 살짝 밝은 광원 느낌) */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* ============================
+   전역 기본 스타일
+============================ */
+html,
+body {
   padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, "Noto Sans KR", sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+* {
   box-sizing: border-box;
 }
 
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ============================
+   캘린더 다크모드 오버라이드
+============================ */
+[data-theme="dark"] .diary-container {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .diary-header h1 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rdp-root,
+[data-theme="dark"] .rdp-months,
+[data-theme="dark"] .rdp-month,
+[data-theme="dark"] .rdp-month_grid,
+[data-theme="dark"] .rdp-weeks,
+[data-theme="dark"] .rdp-week {
+  background: transparent !important;
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rdp-day {
+  background: var(--bg-card) !important;
+  border-color: rgba(99, 102, 241, 0.2) !important;
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .rdp-outside {
+  background: rgba(0, 0, 0, 0.2) !important;
+  color: var(--text-tertiary) !important;
+}
+
+[data-theme="dark"] .rdp-weekdays,
+[data-theme="dark"] .rdp-weekdays th {
+  background: var(--bg-primary) !important;
+  border-bottom-color: rgba(99, 102, 241, 0.3) !important;
+}
+
+[data-theme="dark"] .rdp-weekday {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .rdp-weekday:first-child {
+  color: #f87171 !important;
+}
+
+[data-theme="dark"] .rdp-weekday:last-child {
+  color: #60a5fa !important;
+}
+
+[data-theme="dark"] .rdp-day_button {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .rdp-selected .rdp-day_button {
+  color: var(--accent-indigo);
+}
+
+[data-theme="dark"] .rdp-day_button:hover {
+  background-color: var(--bg-hover) !important;
+}
+
+[data-theme="dark"] .rdp-today:not(.rdp-selected) .rdp-day_button {
+  background-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+[data-theme="dark"] .rdp-selected .rdp-day_button {
+  background-color: var(--accent-indigo-light) !important;
+}

@@ -1,74 +1,328 @@
 .header {
-    height: 60px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 40px;
-    background-color: white;
-    border-bottom: 1px solid #eee;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-sizing: border-box;
-    position: sticky;
-  }
-  
-  .rightSection {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-  }
-  
-  .navButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #666;
-    text-decoration: none;
-    font-size: 16px;
-  }
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40px;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
 
-  .midSection{
-    position: absolute;
-    right: 40px;
-    top: 70px;
-  }
+.logoLink {
+  color: var(--text-primary);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
 
-  .modalOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* 어두운 배경 */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
+.logo {
+  width: 160px;
+  height: auto;
+}
+
+.rightSection {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+/* 로그인 링크 (로그아웃 상태) */
+.loginLink {
+  text-decoration: none;
+  color: var(--text-secondary);
+  font-size: 14px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: background 0.15s;
+}
+
+.loginLink:hover {
+  background: var(--bg-subtle);
+}
+
+/* 프로필 버튼 */
+.profileWrapper {
+  position: relative;
+}
+
+.profileButton {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px 6px 6px;
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+  font-family: inherit;
+}
+
+.profileButton:hover {
+  background: var(--bg-subtle);
+  border-color: var(--border-primary);
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .avatar {
+  background: linear-gradient(135deg, #1e40af 0%, #4c1d95 100%);
+}
+
+.userName {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.arrow {
+  font-size: 10px;
+  color: var(--text-tertiary);
+  transition: transform 0.2s;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+/* 드롭다운 */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 12px;
+  box-shadow: var(--shadow-lg);
+  min-width: 240px;
+  padding: 8px;
+  z-index: 1500;
+  animation: dropdownIn 0.15s ease-out;
+}
+
+@keyframes dropdownIn {
+  from {
+      opacity: 0;
+      transform: translateY(-8px);
   }
-  
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.dropdownHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+}
+
+.dropdownAvatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #38bdf8 0%, #6366f1 100%);
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .dropdownAvatar {
+  background: linear-gradient(135deg, #1e40af 0%, #4c1d95 100%);
+}
+
+.dropdownUserInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.dropdownName {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.dropdownEmail {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdownDivider {
+  height: 1px;
+  background: var(--border-subtle);
+  margin: 6px 0;
+}
+
+.dropdownItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.dropdownItem:hover {
+  background: var(--bg-subtle);
+}
+
+.dropdownIcon {
+  font-size: 16px;
+}
+
+.logoutItem {
+  color: var(--accent-red);
+}
+
+.logoutItem:hover {
+  background: rgba(229, 62, 62, 0.1);
+}
+
+/* 로그아웃 확인 모달 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-overlay);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modalContent {
+  background: var(--bg-card);
+  padding: 28px;
+  border-radius: 16px;
+  text-align: center;
+  min-width: 320px;
+  box-shadow: var(--shadow-xl);
+}
+
+.modalText {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 20px 0;
+}
+
+.modalButtons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.onbtn {
+  padding: 10px 20px;
+  background: var(--accent-red);
+  border: 1px solid var(--accent-red);
+  border-radius: 8px;
+  color: var(--text-inverse);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  font-family: inherit;
+}
+
+.onbtn:hover {
+  opacity: 0.9;
+}
+
+.offbtn {
+  padding: 10px 20px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  font-family: inherit;
+}
+
+.offbtn:hover {
+  background: var(--bg-subtle);
+}
+
+/* ============================
+ 반응형
+============================ */
+
+/* 태블릿 */
+@media (max-width: 1024px) {
+  .header {
+      padding: 0 24px;
+  }
+  .logo {
+      width: 140px;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 640px) {
+  .header {
+      padding: 0 16px;
+  }
+  .logo {
+      width: 120px;
+  }
+  .userName {
+      display: none;  /* 모바일에서 이름 숨김, 아바타만 표시 */
+  }
+  .arrow {
+      display: none;  /* 화살표도 숨김 */
+  }
+  .profileButton {
+      padding: 4px;
+  }
+  .dropdown {
+      min-width: 220px;
+      right: -8px;  /* 화면 밖으로 나가지 않게 조정 */
+  }
   .modalContent {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
+      min-width: 0;
+      width: calc(100vw - 32px);
+      max-width: 380px;
   }
-
-  .onbtn,.offbtn{
-    padding: 10px;
-    border: 1px solid #6366f1;
-    text-align: center;
-    background: #fff;
-    margin: 10px 10px 0;
-    cursor: pointer;
-    color: #6366f1;
-    width: 60px;
-  }
-
-  .onbtn:hover,.offbtn:hover{
-    background: #6366f1;
-    color: #fff;
-    font-weight: bold;
-  }
-
-  
+}
