@@ -75,10 +75,29 @@ model User {
   name      String                                 
   email     String   @unique                       
   password  String                                 
+  role      String   @default("user")   
   createdAt DateTime @default(now())     
 
   records         Record[]
   workoutRecords  WorkoutRecord[]
   dietRecords     DietRecord[]
   aiChats         AiChat[]
+  supportPosts    SupportPost[]      
+}
+
+model SupportPost {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String   @db.Text
+  category  String   // "bug" / "improvement" / "question"
+  status    String   @default("pending") // "pending" / "answered" / "closed"
+  answer    String?  @db.Text            // 관리자 답변 (선택)
+  answeredAt DateTime?                    // 답변 시각
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, createdAt])
+  @@index([status, createdAt])
 }

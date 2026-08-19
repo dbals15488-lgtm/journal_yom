@@ -23,7 +23,9 @@
 .logo {
   width: 160px;
   height: auto;
+  transition: filter 0.2s;
 }
+
 
 .rightSection {
   display: flex;

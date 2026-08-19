@@ -216,6 +216,7 @@ export default function WorkoutPage() {
               className="nav-select"
               value={viewYear}
               onChange={(e) => setViewYear(Number(e.target.value))}
+              style={{marginRight:'10px'}}
             >
               {Array.from({ length: 7 }, (_, i) => new Date().getFullYear() - 3 + i).map((y) => (
                 <option key={y} value={y}>{y}년</option>

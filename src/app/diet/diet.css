@@ -127,6 +127,10 @@
   max-height: 80vh;
 }
 
+.nav-select{
+  margin-right: 0 !important;
+}
+
 /* 상세 카드의 식사구분 태그 색상 */
 .diet-detail-modal .detail-part-tag {
   color: #fff !important;

@@ -1,16 +1,16 @@
-.toast-editor-wrapper .toastui-editor-tabs{
+.toast-editor-wrapper .toastui-editor-tabs {
     display: none !important;
 }
 
-.toastui-editor-md-tab-container{
+.toastui-editor-md-tab-container {
     display: none !important;
 }
 
 .custom-editor-tabs {
     display: flex;
     justify-content: flex-end;
-    background: #f7f9fc;
-    border: 1px solid #dadde1;
+    background: var(--bg-primary);
+    border: 1px solid var(--border-primary);
     border-top: none;
     padding: 8px 16px;
     gap: 8px;
@@ -19,15 +19,61 @@
 .custom-tab-btn {
     padding: 4px 12px;
     font-size: 13px;
-    border: 1px solid #ccc;
-    background: #fff;
+    border: 1px solid var(--border-primary);
+    background: var(--bg-card);
+    color: var(--text-primary);
     cursor: pointer;
     border-radius: 4px;
+    transition: background 0.15s, color 0.15s;
+    font-family: inherit;
+}
+
+.custom-tab-btn:hover {
+    background: var(--bg-hover);
 }
 
 .custom-tab-btn.active {
-    background: #4e73df;
-    color: white;
-    border-color: #4e73df;
+    background: var(--accent-indigo);
+    color: var(--text-inverse);
+    border-color: var(--accent-indigo);
     font-weight: bold;
+}
+
+/* ============================
+   Toast UI Editor 다크모드 대응
+============================ */
+[data-theme="dark"] .toastui-editor-defaultUI {
+    background: var(--bg-card);
+    border-color: var(--border-primary);
+}
+
+[data-theme="dark"] .toastui-editor-toolbar {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
+}
+
+[data-theme="dark"] .toastui-editor-main {
+    background: var(--bg-card);
+}
+
+[data-theme="dark"] .toastui-editor-contents {
+    background: var(--bg-card);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .toastui-editor-contents p,
+[data-theme="dark"] .toastui-editor-contents h1,
+[data-theme="dark"] .toastui-editor-contents h2,
+[data-theme="dark"] .toastui-editor-contents h3,
+[data-theme="dark"] .toastui-editor-contents li {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .toastui-editor-md-container {
+    background: var(--bg-card);
+}
+
+[data-theme="dark"] .toastui-editor-mode-switch {
+    background: var(--bg-primary);
+    border-color: var(--border-primary);
 }
