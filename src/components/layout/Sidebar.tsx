@@ -7,7 +7,12 @@ import Link from 'next/link';
 import styles from './Sidebar.module.css'
 
 
-export default function Sidebar({isOpen, toggleSidebar}){
+interface SidebarProps {
+    isOpen: boolean;
+    toggleSidebar: () => void;
+}
+
+export default function Sidebar({ isOpen, toggleSidebar }: SidebarProps) {
     const pathname = usePathname();
 
     const menuItems = [

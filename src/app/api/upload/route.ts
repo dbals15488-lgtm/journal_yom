@@ -29,7 +29,7 @@ export async function POST(request: Request){
         const fileUrl = `/uploads/${fileName}`;
 
         return NextResponse.json({success: true, fileUrl});
-    }catch(error: any){
+    }catch(error: unknown){
         console.error("API 업로드 라우터 에러 발생:", error);
         return NextResponse.json(
             { error: "서버 내부 오류로 파일 업로드에 실패햇습니다."},

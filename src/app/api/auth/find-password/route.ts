@@ -1,0 +1,44 @@
+import { NextResponse, type NextRequest } from "next/server";
+import bcrypt from "bcryptjs";
+import prisma from "../../../../lib/prisma";
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { userId, email } = body as { userId: string; email: string };
+
+    if (!userId || !email) {
+      return NextResponse.json(
+        { message: "아이디와 이메일을 모두 입력해주세요." },
+        { status: 400 },
+      );
+    }
+
+    const user = await prisma.user.findFirst({
+      where: { userId, email },
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: "일치하는 회원 정보가 없습니다." }, { status: 404 });
+    }
+
+    const tempPassword = Math.random().toString(36).slice(-8) + "1!";
+    const hashedTempPassword = await bcrypt.hash(tempPassword, 10);
+
+    await prisma.user.updateMany({
+      where: { id: user.id },
+      data: { password: hashedTempPassword },
+    });
+
+    return NextResponse.json(
+      {
+        message: "임시 비밀번호가 발급되었습니다. 로그인 후 반드시 변경해주세요",
+        tempPassword,
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error("비밀번호 찾기 에러:", error);
+    return NextResponse.json({ message: "서버 오류가 발생했습니다." }, { status: 500 });
+  }
+}

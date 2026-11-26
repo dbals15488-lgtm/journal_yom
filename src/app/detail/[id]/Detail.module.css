@@ -185,3 +185,52 @@
       width: 100%;
   }
 }
+
+/* Detail page wrapper */
+.pageWrapper {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+/* Editor wrapper */
+.editorWrapper {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  background-color: #fff;
+  text-align: left;
+  color: #000;
+}
+
+.htmlEditColumn {
+  display: flex;
+  flex-direction: column;
+}
+
+.htmlToolbar {
+  padding: 8px 15px;
+}
+
+.htmlTextarea {
+  width: 100%;
+  height: 350px;
+  padding: 15px;
+  border: 1px solid #ccc;
+}
+
+.quillEditor {
+  height: 350px;
+  margin-bottom: 100px;
+}
+
+.fileUploadBox {
+  margin-top: 10px;
+}
+
+.fileWarning {
+  color: red;
+}
+
+.downloadLinkBlock {
+  display: block;
+}

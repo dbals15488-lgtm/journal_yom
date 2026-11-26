@@ -1,28 +1,31 @@
 'use client'
 
-import { useState } from "react";
-import { RecordProvider } from "../context/RecordContext";
+import { type ReactNode, useState } from "react";
+import { type Session } from "next-auth";
 import { Providers } from "./providers";
-import { ThemeProvider } from "../app/contexts/ThemeContext"; // ← 추가
+import { ThemeProvider } from "../app/contexts/ThemeContext";
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
 import "./globals.css";
 
-export default function RootLayoutClient({ children, session }) {
+interface RootLayoutClientProps {
+  children: ReactNode;
+  session: Session | null;
+}
+
+export default function RootLayoutClient({ children, session }: RootLayoutClientProps) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   return (
     <Providers>
-      <ThemeProvider>  {/* ← 추가 */}
-        <RecordProvider>
-          <Header session={session} /> 
-          <div style={{ display: 'flex' }}>
-            <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-            <main style={{ flex: 1 }}>{children}</main>
-          </div>
-        </RecordProvider>
-      </ThemeProvider>  {/* ← 추가 */}
+      <ThemeProvider>
+        <Header session={session} />
+        <div className="layout-flex">
+          <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+          <main className="main-content">{children}</main>
+        </div>
+      </ThemeProvider>
     </Providers>
   );
 }

@@ -563,3 +563,10 @@
     font-size: 18px;
   }
 }
+
+.workout-modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  justify-content: flex-end;
+}

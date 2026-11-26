@@ -118,6 +118,74 @@
 }
 
 /* ============================
+   아이디 찾기 / 비밀번호 찾기 결과
+============================ */
+.resultBox {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.resultText {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-primary);
+    line-height: 1.8;
+}
+
+.resultId {
+    color: #3b82f6;
+    font-size: 1.4rem;
+    display: block;
+    margin: 0.5rem 0;
+}
+
+.toggleBtn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    background-color: var(--bg-subtle, #e5e7eb);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.toggleBtn:hover {
+    background-color: var(--border-primary, #d1d5db);
+}
+
+.resultLabel {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.tempPasswordDisplay {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+}
+
+.tempPasswordDisplay strong {
+    color: #e11d48;
+    background-color: #ffe4e6;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+}
+
+.resultHint {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+}
+
+.warningText {
+    color: #e53e3e;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+/* ============================
    반응형
 ============================ */
 

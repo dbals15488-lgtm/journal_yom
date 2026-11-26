@@ -193,3 +193,12 @@ a {
   background-color: var(--bg-card);
   color: var(--text-primary);
 }
+
+/* Layout */
+.layout-flex {
+  display: flex;
+}
+
+.main-content {
+  flex: 1;
+}

@@ -1,8 +1,9 @@
+import { type ReactNode } from "react";
 import { auth } from "../auth";
 import RootLayoutClient from "./RootLayoutClient";
 
-export default async function RootLayout({ children }) {
-  const session = await auth(); 
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const session = await auth();
 
   return (
     <html lang="ko" suppressHydrationWarning={true}>

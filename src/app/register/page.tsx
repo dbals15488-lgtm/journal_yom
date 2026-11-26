@@ -1,11 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./register.module.css";
-import { Router, useRouter } from "next/navigation";
 
 export default function RegisterPage() {
-  // 입력값 바구니
   const [userId, setUserId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,8 +12,7 @@ export default function RegisterPage() {
 
   const router = useRouter();
 
-  // 가입 버튼 실행될 함수
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const koreanRegex = /^[가-힣]{2,10}$/;
@@ -23,31 +21,27 @@ export default function RegisterPage() {
       return;
     }
 
-    // 아이디 검사
     const userIdRegex = /^[a-z][a-z0-9]{5,11}$/;
     if (!userIdRegex.test(userId)) {
       alert("아이디는 6~12자로 입력해 주세요.");
-      return
+      return;
     }
 
-    // 비밀번호 검사
     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRegex.test(password)) {
-        alert("비밀번호는 영문자와 숫자를 조합하여 8글자 이상으로 입력해 주세요.");
-        return;
+      alert("비밀번호는 영문자와 숫자를 조합하여 8글자 이상으로 입력해 주세요.");
+      return;
     }
 
-    if(userId === password){
-        alert("보안을 위해 아이디와 비밀번호를 다르게 입력해주세요.")
-        return;
+    if (userId === password) {
+      alert("보안을 위해 아이디와 비밀번호를 다르게 입력해주세요.");
+      return;
     }
 
     try {
       const response = await fetch("/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, name, email, password }),
       });
 
@@ -59,8 +53,7 @@ export default function RegisterPage() {
         setName("");
         setEmail("");
         setPassword("");
-
-        router.push("/")
+        router.push("/");
       } else {
         alert(data.message || "회원가입에 실패했습니다.");
       }
@@ -73,15 +66,11 @@ export default function RegisterPage() {
   return (
     <div className={styles.container}>
       <div className={styles.card}>
-        {/* 상단 타이틀 구역 */}
         <div className={styles.header}>
           <h2 className={styles.title}>회원가입</h2>
-          <p className={styles.subtitle}>
-            당신의 성장을 기록하는 공간에 오신 것을 환영합니다.
-          </p>
+          <p className={styles.subtitle}>당신의 성장을 기록하는 공간에 오신 것을 환영합니다.</p>
         </div>
 
-        {/* 회원 가입 입력 폼 */}
         <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.inputGroup}>
             <label className={styles.label}>이름</label>
@@ -136,25 +125,15 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        {/* 소셜 로그인 구역 */}
         <div className={styles.dividerContainer}>
-          <div className={styles.dividerLine}></div>
-          <span className={styles.dividerText}>
-            또는 소셜 계정으로 시작하기
-          </span>
+          <div className={styles.dividerLine} />
+          <span className={styles.dividerText}>또는 소셜 계정으로 시작하기</span>
         </div>
 
-        {/* 소셜 로그인 버튼 박스 */}
         <div className={styles.socialGroup}>
-          <button className={`${styles.socialButton} ${styles.google}`}>
-            구글
-          </button>
-          <button className={`${styles.socialButton} ${styles.kakao}`}>
-            카카오
-          </button>
-          <button className={`${styles.socialButton} ${styles.naver}`}>
-            네이버
-          </button>
+          <button className={`${styles.socialButton} ${styles.google}`}>구글</button>
+          <button className={`${styles.socialButton} ${styles.kakao}`}>카카오</button>
+          <button className={`${styles.socialButton} ${styles.naver}`}>네이버</button>
         </div>
       </div>
     </div>

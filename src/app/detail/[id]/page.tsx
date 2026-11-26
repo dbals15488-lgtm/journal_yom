@@ -19,7 +19,12 @@ const ReactQuill = dynamic(
   }
 );
 
-const modules: any = {
+interface QuillToolbar {
+  container: (string | Record<string, string | string[]>)[][];
+  handlers?: Record<string, () => void>;
+}
+
+const modules: { toolbar: QuillToolbar } = {
   toolbar: {
     container: [
       ["htmlEdit"],
@@ -175,7 +180,7 @@ export default function RecordDetailPage() {
   }
 
   return (
-    <div className={isHtmlMode ? "html-mode" : ""} style={{ maxWidth: "1000px", margin: "40px auto", padding: "20px" }}>
+    <div className={`${styles.pageWrapper} ${isHtmlMode ? "html-mode" : ""}`}>
       <nav className={styles.nav}>
         <button onClick={() => router.push("/diary")} className={styles.backBtn}>← 목록으로 돌아가기</button>
       </nav>
@@ -185,16 +190,16 @@ export default function RecordDetailPage() {
           <>
             <input className={styles.titleInput} value={editTitle} onChange={(e) => setEditTitle(e.target.value)} />
             
-            <div style={{ marginTop: '20px', marginBottom: '20px', backgroundColor: '#fff', textAlign: 'left', color: '#000' }}>
+            <div className={styles.editorWrapper}>
               {isHtmlMode ? (
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div className="ql-toolbar ql-snow" style={{ padding: '8px 15px' }}>
+                <div className={styles.htmlEditColumn}>
+                  <div className={`ql-toolbar ql-snow ${styles.htmlToolbar}`}>
                     <button type="button" className="ql-htmlEdit" onClick={toggleHtmlMode} />
                   </div>
-                  <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} style={{ width: '100%', height: '350px', padding: '15px', border: '1px solid #ccc' }} />
+                  <textarea value={editContent} onChange={(e) => setEditContent(e.target.value)} className={styles.htmlTextarea} />
                 </div>
               ) : (
-                <ReactQuill theme="snow" value={editContent} onChange={setEditContent} modules={modules} formats={formats} style={{ height: '350px', marginBottom: '100px' }} />
+                <ReactQuill theme="snow" value={editContent} onChange={setEditContent} modules={modules} formats={formats} className={styles.quillEditor} />
               )}
             </div>
 
@@ -216,9 +221,9 @@ export default function RecordDetailPage() {
                 </div>
               ))}
 
-              <div className="file_upload_box" style={{ marginTop: '10px' }}>
+              <div className={`file_upload_box ${styles.fileUploadBox}`}>
                 <input type="file" multiple className={styles.fileUpload} onChange={handleFileChange} />
-                <span style={{ color: 'red' }}>*파일은 5MB이하만 등록 가능합니다.</span>
+                <span className={styles.fileWarning}>*파일은 5MB이하만 등록 가능합니다.</span>
               </div>
             </div>
 
@@ -245,7 +250,7 @@ export default function RecordDetailPage() {
               <div className={styles.downloadSection}>
                 <span className={styles.downloadTitle}>📎 첨부파일 :</span>
                 {existingFileUrls.map((url, index) => (
-                  <a key={index} href={url} download target="_blank" rel="noopener noreferrer" className={styles.downloadLink} style={{ display: "block" }}>
+                  <a key={index} href={url} download target="_blank" rel="noopener noreferrer" className={`${styles.downloadLink} ${styles.downloadLinkBlock}`}>
                     {getFileName(url)}
                   </a>
                 ))}
